@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Contact Safari Beauty Salon in South Gate, CA." />
+  <title>Contact | Safari Beauty Salon</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .page-hero { padding: 8rem 5% 4rem; background: var(--color-white); border-bottom: 1px solid var(--color-sand); text-align: center; }
+    .page-hero__eyebrow { font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-gold); margin-bottom: 0.75rem; }
+    .page-hero__title { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 600; color: var(--color-charcoal); margin-bottom: 1rem; }
+    .page-hero__subtitle { font-size: 0.95rem; color: var(--color-muted); max-width: 480px; margin: 0 auto; }
+
+    .contact-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: var(--space-md);
+      align-items: start;
+    }
+
+    /* Contact Info */
+    .contact-info { display: flex; flex-direction: column; gap: 1.25rem; }
+
+    .contact-block {
+      background: var(--color-white);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+    }
+
+    .contact-block__icon { font-size: 1.4rem; margin-bottom: 0.75rem; }
+    .contact-block__title { font-family: var(--font-display); font-size: 1rem; font-weight: 600; color: var(--color-charcoal); margin-bottom: 0.4rem; }
+    .contact-block__detail { font-size: 0.88rem; color: var(--color-muted); line-height: 1.7; }
+    .contact-block__detail a { color: var(--color-gold-dark); }
+
+    /* Map placeholder */
+    .map-placeholder {
+      background: var(--color-sand);
+      border-radius: var(--radius-lg);
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--color-muted);
+      margin-top: 1.25rem;
+    }
+
+    /* Contact Form */
+    .contact-form {
+      background: var(--color-white);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem;
+      box-shadow: var(--shadow);
+    }
+
+    .contact-form h2 {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: var(--color-charcoal);
+      margin-bottom: 0.5rem;
+    }
+
+    .contact-form__sub { font-size: 0.85rem; color: var(--color-muted); margin-bottom: 2rem; }
+
+    .form-group { margin-bottom: 1.25rem; }
+    .form-group label { display: block; font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-muted); margin-bottom: 0.4rem; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1.5px solid var(--color-sand);
+      border-radius: var(--radius-md);
+      background: var(--color-cream);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      color: var(--color-charcoal);
+      transition: border-color 0.25s;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      outline: none;
+      border-color: var(--color-gold);
+      background: var(--color-white);
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    .contact-submit {
+      width: 100%;
+      padding: 1rem;
+      background: var(--color-gold);
+      color: var(--color-white);
+      border: none;
+      border-radius: var(--radius-md);
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      margin-top: 0.5rem;
+      transition: background 0.25s, transform 0.2s;
+    }
+    .contact-submit:hover { background: var(--color-gold-dark); transform: translateY(-1px); }
+
+    @media (max-width: 768px) {
+      .contact-layout { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <nav class="nav">
+      <a href="index.html" class="nav__logo">Safari <span>Beauty</span></a>
+      <button class="nav__toggle" id="navToggle" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav__links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="booking.html">Book Now</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html" class="active">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <div class="page-hero">
+      <p class="page-hero__eyebrow">Get in Touch</p>
+      <h1 class="page-hero__title">Contact Us</h1>
+      <p class="page-hero__subtitle">Questions, feedback, or just want to say hello? We'd love to hear from you.</p>
+    </div>
+
+    <section class="section section--alt">
+      <div class="contact-layout">
+
+        <!-- LEFT: Info -->
+        <div class="contact-info">
+          <div class="contact-block">
+            <div class="contact-block__icon">📍</div>
+            <p class="contact-block__title">Location</p>
+            <p class="contact-block__detail">South Gate, California<br>Los Angeles County</p>
+          </div>
+          <div class="contact-block">
+            <div class="contact-block__icon">📞</div>
+            <p class="contact-block__title">Phone</p>
+            <p class="contact-block__detail"><a href="tel:+13235550198">(323) 555-0198</a></p>
+          </div>
+          <div class="contact-block">
+            <div class="contact-block__icon">📧</div>
+            <p class="contact-block__title">Email</p>
+            <p class="contact-block__detail"><a href="mailto:hello@safaribeauty.com">hello@safaribeauty.com</a></p>
+          </div>
+          <div class="contact-block">
+            <div class="contact-block__icon">🕐</div>
+            <p class="contact-block__title">Hours</p>
+            <p class="contact-block__detail">
+              Mon – Fri: 9am – 7pm<br>
+              Saturday: 9am – 6pm<br>
+              Sunday: 10am – 5pm
+            </p>
+          </div>
+
+          <!-- Google Maps embed placeholder -->
+          <div class="map-placeholder">
+            <span style="font-size:2rem">🗺️</span>
+            <span>Google Maps embed goes here</span>
+            <span style="font-size:0.75rem;">Replace with your actual embed code from Google Maps</span>
+          </div>
+        </div>
+
+        <!-- RIGHT: Contact Form -->
+        <div class="contact-form">
+          <h2>Send a Message</h2>
+          <p class="contact-form__sub">We'll get back to you within one business day.</p>
+
+          <!--
+            Like the booking form, this will connect to
+            the Python backend in Sprint 3.
+          -->
+          <form id="contactForm">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" placeholder="Maria" required />
+              </div>
+              <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" placeholder="Lopez" required />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" placeholder="maria@email.com" required />
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Phone (optional)</label>
+              <input type="tel" id="phone" placeholder="(323) 555-0000" />
+            </div>
+
+            <div class="form-group">
+              <label for="subject">Subject</label>
+              <select id="subject">
+                <option value="" disabled selected>What's this about?</option>
+                <option>Appointment Question</option>
+                <option>Pricing & Services</option>
+                <option>Extensions Consultation</option>
+                <option>General Inquiry</option>
+                <option>Feedback</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="message">Message</label>
+              <textarea id="message" rows="5" placeholder="Tell us what's on your mind..." required></textarea>
+            </div>
+
+            <button type="submit" class="contact-submit">Send Message</button>
+          </form>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__grid">
+      <div>
+        <p class="footer__logo">Safari <span>Beauty</span></p>
+        <p class="footer__tagline">Modern hair styling and extensions in the heart of South Gate, California.</p>
+      </div>
+      <div>
+        <p class="footer__heading">Pages</p>
+        <ul class="footer__links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="booking.html">Book Now</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer__info">
+        <p class="footer__heading">Visit Us</p>
+        <p>South Gate, CA</p>
+        <p>Mon–Sat: 9am – 7pm</p>
+        <p>Sun: 10am – 5pm</p>
+      </div>
+    </div>
+    <p class="footer__bottom">© 2025 Safari Beauty Salon. All rights reserved.</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('Message sent! We\'ll get back to you within one business day. (Backend coming in Sprint 3!)');
+    });
+  </script>
+</body>
+</html>

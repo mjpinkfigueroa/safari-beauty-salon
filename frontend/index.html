@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<!--
+  index.html — Homepage
+  Safari Beauty Salon
+
+  STRUCTURE OF EVERY PAGE:
+  <head>   → metadata, links to CSS, page title
+  <header> → navigation bar (same on all pages)
+  <main>   → unique content for this page
+  <footer> → bottom info (same on all pages)
+  <script> → JavaScript at the bottom (loads after HTML)
+-->
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <!-- Tells mobile browsers not to zoom out — makes site look correct on phones -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SEO: What Google shows in search results -->
+  <meta name="description" content="Safari Beauty Salon — expert hair and extensions in South Gate, CA. Book your appointment today." />
+
+  <title>Safari Beauty Salon | South Gate, CA</title>
+
+  <!-- Link to our global stylesheet -->
+  <link rel="stylesheet" href="css/style.css" />
+
+  <!-- Page-specific styles only for the homepage -->
+  <style>
+    /* ── SERVICES PREVIEW GRID ── */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      margin-top: var(--space-md);
+    }
+
+    .service-card {
+      background: var(--color-white);
+      border-radius: var(--radius-lg);
+      padding: 2rem 1.5rem;
+      box-shadow: var(--shadow);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Subtle gold top border accent */
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(to right, var(--color-gold), transparent);
+    }
+
+    .service-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(92, 74, 50, 0.14);
+    }
+
+    .service-card__icon {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .service-card__name {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--color-charcoal);
+      margin-bottom: 0.5rem;
+    }
+
+    .service-card__desc {
+      font-size: 0.88rem;
+      color: var(--color-muted);
+      line-height: 1.7;
+      margin-bottom: 1.25rem;
+    }
+
+    .service-card__price {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--color-gold-dark);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── WHY CHOOSE US ── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      margin-top: var(--space-md);
+    }
+
+    .feature {
+      text-align: center;
+      padding: 1.5rem 1rem;
+    }
+
+    .feature__icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--color-sand);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      margin: 0 auto 1rem;
+    }
+
+    .feature__title {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--color-charcoal);
+      margin-bottom: 0.5rem;
+    }
+
+    .feature__text {
+      font-size: 0.85rem;
+      color: var(--color-muted);
+      line-height: 1.7;
+    }
+
+    /* ── BANNER / CTA STRIP ── */
+    .cta-banner {
+      background: var(--color-charcoal);
+      padding: var(--space-lg) 5%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .cta-banner__text h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 600;
+      color: var(--color-white);
+      margin-bottom: 0.5rem;
+    }
+
+    .cta-banner__text p {
+      font-size: 0.9rem;
+      color: var(--color-muted);
+    }
+
+    /* ── TESTIMONIAL STRIP ── */
+    .testimonials {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+      margin-top: var(--space-md);
+    }
+
+    .testimonial {
+      background: var(--color-cream);
+      border-left: 3px solid var(--color-gold);
+      padding: 1.5rem;
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    }
+
+    .testimonial__stars {
+      color: var(--color-gold);
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      margin-bottom: 0.75rem;
+    }
+
+    .testimonial__text {
+      font-size: 0.92rem;
+      color: var(--color-bark);
+      font-style: italic;
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+
+    .testimonial__author {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--color-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ════════════════════════════════
+       NAVIGATION
+       Same nav included on every page.
+       'active' class highlights current page link.
+  ════════════════════════════════ -->
+  <header>
+    <nav class="nav">
+      <a href="index.html" class="nav__logo">
+        Safari <span>Beauty</span>
+      </a>
+
+      <!-- Hamburger button (visible only on mobile) -->
+      <button class="nav__toggle" id="navToggle" aria-label="Open menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <ul class="nav__links" id="navLinks">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="booking.html">Book Now</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ════════════════════════════════
+       MAIN CONTENT
+  ════════════════════════════════ -->
+  <main>
+
+    <!-- HERO: First thing visitors see -->
+    <section class="hero">
+      <div class="hero__content">
+        <p class="hero__eyebrow fade-up">South Gate, California</p>
+        <h1 class="hero__title fade-up fade-up--delay-1">
+          Where Style<br>Meets <em>Confidence</em>
+        </h1>
+        <p class="hero__subtitle fade-up fade-up--delay-2">
+          Expert hair styling and extensions in our freshly remodeled, modern salon.
+          Book your transformation today.
+        </p>
+        <div class="hero__actions fade-up fade-up--delay-3">
+          <a href="booking.html" class="btn btn--primary">Book Appointment</a>
+          <a href="services.html" class="btn btn--outline">Our Services</a>
+        </div>
+      </div>
+      <div class="hero__line"></div>
+    </section>
+
+    <!-- SERVICES PREVIEW -->
+    <section class="section section--alt">
+      <div class="section__header">
+        <p class="section__eyebrow">What We Offer</p>
+        <div class="section__divider"></div>
+        <h2 class="section__title">Expert Hair Services</h2>
+        <p class="section__subtitle">
+          From precision cuts to full extensions — every service is tailored to you.
+        </p>
+      </div>
+
+      <div class="services-grid">
+
+        <div class="service-card">
+          <div class="service-card__icon">✂️</div>
+          <h3 class="service-card__name">Haircut & Styling</h3>
+          <p class="service-card__desc">
+            Precision cuts customized to your face shape, texture, and lifestyle.
+          </p>
+          <span class="service-card__price">Starting at $45</span>
+        </div>
+
+        <div class="service-card">
+          <div class="service-card__icon">💇</div>
+          <h3 class="service-card__name">Hair Extensions</h3>
+          <p class="service-card__desc">
+            Natural-looking length and volume using premium extension methods.
+          </p>
+          <span class="service-card__price">Starting at $150</span>
+        </div>
+
+        <div class="service-card">
+          <div class="service-card__icon">🎨</div>
+          <h3 class="service-card__name">Color & Highlights</h3>
+          <p class="service-card__desc">
+            Balayage, ombre, full color — we bring your vision to life.
+          </p>
+          <span class="service-card__price">Starting at $85</span>
+        </div>
+
+        <div class="service-card">
+          <div class="service-card__icon">🌿</div>
+          <h3 class="service-card__name">Treatments</h3>
+          <p class="service-card__desc">
+            Deep conditioning and keratin treatments to restore shine and health.
+          </p>
+          <span class="service-card__price">Starting at $60</span>
+        </div>
+
+      </div>
+
+      <div style="text-align:center; margin-top: 2.5rem;">
+        <a href="services.html" class="btn btn--outline">View All Services</a>
+      </div>
+    </section>
+
+    <!-- WHY CHOOSE US -->
+    <section class="section">
+      <div class="section__header">
+        <p class="section__eyebrow">Why Safari Beauty</p>
+        <div class="section__divider"></div>
+        <h2 class="section__title">Our Promise to You</h2>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature">
+          <div class="feature__icon">✨</div>
+          <h3 class="feature__title">Freshly Remodeled</h3>
+          <p class="feature__text">Experience our brand-new modern interior — bright, clean, and welcoming.</p>
+        </div>
+        <div class="feature">
+          <div class="feature__icon">👩‍🎨</div>
+          <h3 class="feature__title">Expert Stylists</h3>
+          <p class="feature__text">Our team brings years of experience and a passion for beautiful hair.</p>
+        </div>
+        <div class="feature">
+          <div class="feature__icon">💛</div>
+          <h3 class="feature__title">Personal Touch</h3>
+          <p class="feature__text">We listen. Every appointment is a conversation, not just a service.</p>
+        </div>
+        <div class="feature">
+          <div class="feature__icon">📅</div>
+          <h3 class="feature__title">Easy Booking</h3>
+          <p class="feature__text">Book online anytime — no phone calls, no waiting on hold.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="section section--alt">
+      <div class="section__header">
+        <p class="section__eyebrow">Client Love</p>
+        <div class="section__divider"></div>
+        <h2 class="section__title">What Our Guests Say</h2>
+      </div>
+
+      <div class="testimonials">
+        <div class="testimonial">
+          <div class="testimonial__stars">★★★★★</div>
+          <p class="testimonial__text">"The new salon looks absolutely stunning. My extensions look so natural — I get compliments everywhere I go!"</p>
+          <span class="testimonial__author">— Maria L., South Gate</span>
+        </div>
+        <div class="testimonial">
+          <div class="testimonial__stars">★★★★★</div>
+          <p class="testimonial__text">"I've been coming here for years. The remodel is beautiful — so bright and modern. The quality never disappoints."</p>
+          <span class="testimonial__author">— Carmen R., Lynwood</span>
+        </div>
+        <div class="testimonial">
+          <div class="testimonial__stars">★★★★★</div>
+          <p class="testimonial__text">"Booked online in two minutes. Came in and felt like royalty. This is my salon forever."</p>
+          <span class="testimonial__author">— Jessica T., Huntington Park</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA BANNER -->
+    <section class="cta-banner">
+      <div class="cta-banner__text">
+        <h2>Ready for your transformation?</h2>
+        <p>Book your appointment online — it only takes 2 minutes.</p>
+      </div>
+      <a href="booking.html" class="btn btn--light">Book Now</a>
+    </section>
+
+  </main>
+
+  <!-- ════════════════════════════════
+       FOOTER — Same on every page
+  ════════════════════════════════ -->
+  <footer class="footer">
+    <div class="footer__grid">
+      <div>
+        <p class="footer__logo">Safari <span>Beauty</span></p>
+        <p class="footer__tagline">
+          Modern hair styling and extensions in the heart of South Gate, California.
+        </p>
+      </div>
+      <div>
+        <p class="footer__heading">Pages</p>
+        <ul class="footer__links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="booking.html">Book Now</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer__info">
+        <p class="footer__heading">Visit Us</p>
+        <p>South Gate, CA</p>
+        <p>Mon–Sat: 9am – 7pm</p>
+        <p>Sun: 10am – 5pm</p>
+      </div>
+    </div>
+    <p class="footer__bottom">© 2025 Safari Beauty Salon. All rights reserved.</p>
+  </footer>
+
+  <!-- ════════════════════════════════
+       JAVASCRIPT
+       Always placed at the bottom so
+       HTML loads first, then JS runs.
+  ════════════════════════════════ -->
+  <script src="js/main.js"></script>
+
+</body>
+</html>

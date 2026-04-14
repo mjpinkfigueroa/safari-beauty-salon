@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Safari Beauty Salon services — haircuts, extensions, color, and treatments in South Gate, CA." />
+  <title>Services | Safari Beauty Salon</title>
+  <link rel="stylesheet" href="css/style.css" />
+
+  <style>
+    /* ── PAGE HERO (shorter than homepage) ── */
+    .page-hero {
+      padding: 8rem 5% 4rem;
+      background: var(--color-white);
+      border-bottom: 1px solid var(--color-sand);
+      text-align: center;
+    }
+
+    .page-hero__eyebrow {
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--color-gold);
+      margin-bottom: 0.75rem;
+    }
+
+    .page-hero__title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 600;
+      color: var(--color-charcoal);
+      margin-bottom: 1rem;
+    }
+
+    .page-hero__subtitle {
+      font-size: 0.95rem;
+      color: var(--color-muted);
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* ── SERVICE CATEGORY ── */
+    .service-category {
+      margin-bottom: var(--space-md);
+    }
+
+    .category-label {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--color-gold);
+      border-bottom: 1px solid var(--color-sand);
+      padding-bottom: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* ── SERVICE LIST ROWS ── */
+    .service-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .service-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 1.25rem 0;
+      border-bottom: 1px solid var(--color-sand);
+      gap: 1rem;
+      transition: background 0.2s;
+    }
+
+    .service-row:last-child { border-bottom: none; }
+
+    .service-row__info { flex: 1; }
+
+    .service-row__name {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--color-charcoal);
+      margin-bottom: 0.3rem;
+    }
+
+    .service-row__desc {
+      font-size: 0.85rem;
+      color: var(--color-muted);
+      line-height: 1.6;
+    }
+
+    .service-row__duration {
+      font-size: 0.78rem;
+      color: var(--color-gold);
+      margin-top: 0.3rem;
+    }
+
+    .service-row__price {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--color-gold-dark);
+      white-space: nowrap;
+      padding-top: 0.2rem;
+    }
+
+    /* ── POLICY BOX ── */
+    .policy-box {
+      background: var(--color-sand);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      margin-top: var(--space-md);
+    }
+
+    .policy-box h3 {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--color-charcoal);
+      margin-bottom: 1rem;
+    }
+
+    .policy-box ul {
+      list-style: disc;
+      padding-left: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .policy-box ul li {
+      font-size: 0.88rem;
+      color: var(--color-bark);
+      line-height: 1.6;
+    }
+
+    /* ── TWO COLUMN LAYOUT ── */
+    .services-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-md);
+    }
+
+    @media (max-width: 768px) {
+      .services-layout { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <nav class="nav">
+      <a href="index.html" class="nav__logo">Safari <span>Beauty</span></a>
+      <button class="nav__toggle" id="navToggle" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav__links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="services.html" class="active">Services</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="booking.html">Book Now</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+
+    <div class="page-hero">
+      <p class="page-hero__eyebrow">Our Menu</p>
+      <h1 class="page-hero__title">Services & Pricing</h1>
+      <p class="page-hero__subtitle">
+        Every service is performed with care by our trained stylists.
+        Prices may vary based on hair length and density.
+      </p>
+    </div>
+
+    <section class="section section--alt">
+      <div class="services-layout">
+
+        <!-- LEFT COLUMN -->
+        <div>
+          <div class="service-category">
+            <p class="category-label">Haircuts</p>
+            <div class="service-list">
+              <div class="service-row">
+                <div class="service-row__info">
+                  <p class="service-row__name">Women's Haircut</p>
+                  <p class="service-row__desc">Wash, cut, and blow-dry styled to your preference.</p>
+                  <p class="service-row__duration">⏱ 60 min</p>
+                </div>
+                <span class="service-row__price">$45+</span>
+              </div>
+              <div class="service-row">
+                <div class="service-row__info">
+                  <p class="service-row__name">Men's Haircut</p>
+                  <p class="service-row__desc">Precision cut with clean finish.</p>
+                  <p class="service-row__duration">⏱ 30 min</p>
+                </div>
+                <span class="service-row__price">$30+</span>
+              </div>
+              <div class="service-row">
+                <div class="service-row__info">
+                  <p class="service-row__name">Kids' Haircut</p>
+                  <p class="service-row__desc">For kids 12 and under.</p>
+                  <p class="service-row__duration">⏱ 30 min</p>
+                </div>
+                <span class="service-row__price">$20+</span>
+              </div>
+              <div class="service-row">
+                <div class="service-row__info">
+                  <p class="service-row__name">Bang Trim</p>
+                  <p class="service-row__desc">Quick bang refresh between appointments.</p>
+                  <p class="service-row__duration">⏱ 15 min</p>
+                </div>
+                <span class="service-row__price">$10</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="service-category">
+            <p class="category-label">Color</p>
+            <div class="service-list">
+              <div class="service-row">
+                <div class="service-row__info">
+                  <p class="service-row__name">Full Color</p>
+                  <p class="service-row__desc">Single-process color from root to ends.</p>
+                  <p class="service-row__duration">⏱ 90 min</p>
+                </div>
+                <span class="service-row__price">$85+</span>
+              </div>
+              <div class="service-row">
+                <div class="service-row__info">
+                  <p class="service-row__name">Highlights</p>
+                  <p class="service-row__desc">Partial or full foil highlights.</p>
+                  <p class="service-row__duration">⏱ 2 hrs</p>
+                </div>
+                <span class="service-row__price">$100+</span>
+              </div>
+              <div class="service-row">
+                <div class="service-row__info">
+                  <p class="service-row__name">Balayage</p>
+                  <p class="service-row__desc">Hand-painted, sun-kissed natural color.</p>
+                  <p class="service-row__duration">⏱ 2.5 hrs</p>
+                </div>
+                <span class="service-row__price">$130+</span>
+              </div>
+              <div class="service-row">
+                <div class="service-row__info">
+                  <p class="service-row__name">Root Touch-Up</p>
+                  <p class="service-row__desc">Color applied at the root only.</p>
+                  <p class="service-row__duration">⏱ 60 min</p>
+                </div>
+                <span class="service-row__price">$60+</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div>
+          <div class="service-category">
+            <p class="category-label">Extensions</p>
+            <div class="service-list">
+              <div class="service-row">
+                <div class="service-row__info">
+                  <p class="service-row__name">Tape-In Extensions</p>
+                  <p class="service-row__desc">Seamless, reusable tape method. Natural look and feel.</p>
+                  <p class="service-row__duration">⏱ 2 hrs</p>
+                </div>
+                <span class="service-row__price">$200+</span>
+              </div>
+              <div class="service-row">
+                <div class="service-row__info">
+                  <p class="service-row__name">Sew-In Extensions</p>
+                  <p class="service-row__desc">Weft sewn onto braided base for full, lasting volume.</p>
+                  <p class="service-row__duration">⏱ 3 hrs</p>
+                </div>
+                <span class="service-row__price">$250+</span>
+              </div>
+              <div class="service-row">
+                <div class="service-row__info">
+                  <p class="service-row__name">Clip-In Consultation</p>
+                  <p class="service-row__desc">Color matching and fitting for clip-in extensions.</p>
+                  <p class="service-row__duration">⏱ 30 min</p>
+                </div>
+                <span class="service-row__price">$40</span>
+              </div>
+              <div class="service-row">
+                <div class="service-row__info">
+                  <p class="service-row__name">Extension Removal</p>
+                  <p class="service-row__desc">Safe removal with conditioning treatment.</p>
+                  <p class="service-row__duration">⏱ 60 min</p>
+                </div>
+                <span class="service-row__price">$75+</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="service-category">
+            <p class="category-label">Treatments</p>
+            <div class="service-list">
+              <div class="service-row">
+                <div class="service-row__info">
+                  <p class="service-row__name">Keratin Treatment</p>
+                  <p class="service-row__desc">Smoothing treatment for frizz-free, shiny hair.</p>
+                  <p class="service-row__duration">⏱ 2.5 hrs</p>
+                </div>
+                <span class="service-row__price">$150+</span>
+              </div>
+              <div class="service-row">
+                <div class="service-row__info">
+                  <p class="service-row__name">Deep Conditioning</p>
+                  <p class="service-row__desc">Intensive mask to restore moisture and strength.</p>
+                  <p class="service-row__duration">⏱ 45 min</p>
+                </div>
+                <span class="service-row__price">$35+</span>
+              </div>
+              <div class="service-row">
+                <div class="service-row__info">
+                  <p class="service-row__name">Scalp Treatment</p>
+                  <p class="service-row__desc">Soothing scalp massage and nourishing treatment.</p>
+                  <p class="service-row__duration">⏱ 30 min</p>
+                </div>
+                <span class="service-row__price">$40+</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Salon Policy -->
+      <div class="policy-box">
+        <h3>Salon Policies</h3>
+        <ul>
+          <li>Prices listed are starting prices and may vary based on hair length, density, and complexity.</li>
+          <li>Please arrive 5 minutes before your appointment. Appointments more than 15 minutes late may be rescheduled.</li>
+          <li>Cancellations require 24-hour notice. Same-day cancellations may incur a fee.</li>
+          <li>A consultation is always included before any color or extension service.</li>
+        </ul>
+      </div>
+
+      <div style="text-align:center; margin-top: 2.5rem;">
+        <a href="booking.html" class="btn btn--primary">Book a Service</a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="footer__grid">
+      <div>
+        <p class="footer__logo">Safari <span>Beauty</span></p>
+        <p class="footer__tagline">Modern hair styling and extensions in the heart of South Gate, California.</p>
+      </div>
+      <div>
+        <p class="footer__heading">Pages</p>
+        <ul class="footer__links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="booking.html">Book Now</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer__info">
+        <p class="footer__heading">Visit Us</p>
+        <p>South Gate, CA</p>
+        <p>Mon–Sat: 9am – 7pm</p>
+        <p>Sun: 10am – 5pm</p>
+      </div>
+    </div>
+    <p class="footer__bottom">© 2025 Safari Beauty Salon. All rights reserved.</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

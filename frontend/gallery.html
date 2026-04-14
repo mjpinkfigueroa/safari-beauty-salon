@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Safari Beauty Salon photo gallery — haircuts, extensions, and color transformations." />
+  <title>Gallery | Safari Beauty Salon</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .page-hero {
+      padding: 8rem 5% 4rem;
+      background: var(--color-white);
+      border-bottom: 1px solid var(--color-sand);
+      text-align: center;
+    }
+    .page-hero__eyebrow { font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-gold); margin-bottom: 0.75rem; }
+    .page-hero__title { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 600; color: var(--color-charcoal); margin-bottom: 1rem; }
+    .page-hero__subtitle { font-size: 0.95rem; color: var(--color-muted); max-width: 480px; margin: 0 auto; }
+
+    /* Filter tabs */
+    .gallery-filters {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: var(--space-md);
+    }
+    .filter-btn {
+      padding: 0.5rem 1.25rem;
+      border: 1.5px solid var(--color-sand);
+      border-radius: 99px;
+      background: transparent;
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      color: var(--color-bark);
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--color-gold);
+      border-color: var(--color-gold);
+      color: var(--color-white);
+    }
+
+    /* Masonry-style gallery grid */
+    .gallery-grid {
+      columns: 3;
+      column-gap: 1rem;
+    }
+    .gallery-item {
+      break-inside: avoid;
+      margin-bottom: 1rem;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+    }
+    .gallery-item__placeholder {
+      width: 100%;
+      background: var(--color-sand);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 0.5rem;
+      border-radius: var(--radius-md);
+      transition: background 0.3s;
+    }
+    .gallery-item__placeholder:hover { background: var(--color-gold); }
+    .gallery-item__placeholder:hover .gallery-item__icon { color: white; }
+    .gallery-item__placeholder:hover .gallery-item__caption { color: white; }
+    .gallery-item__icon { font-size: 2rem; color: var(--color-gold-dark); transition: color 0.3s; }
+    .gallery-item__caption { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-muted); transition: color 0.3s; }
+
+    /* Varied heights for masonry feel */
+    .gallery-item:nth-child(1) .gallery-item__placeholder  { height: 280px; }
+    .gallery-item:nth-child(2) .gallery-item__placeholder  { height: 200px; }
+    .gallery-item:nth-child(3) .gallery-item__placeholder  { height: 320px; }
+    .gallery-item:nth-child(4) .gallery-item__placeholder  { height: 240px; }
+    .gallery-item:nth-child(5) .gallery-item__placeholder  { height: 300px; }
+    .gallery-item:nth-child(6) .gallery-item__placeholder  { height: 220px; }
+    .gallery-item:nth-child(7) .gallery-item__placeholder  { height: 260px; }
+    .gallery-item:nth-child(8) .gallery-item__placeholder  { height: 200px; }
+    .gallery-item:nth-child(9) .gallery-item__placeholder  { height: 340px; }
+
+    .gallery-note {
+      text-align: center;
+      margin-top: var(--space-md);
+      padding: 1.5rem;
+      background: var(--color-sand);
+      border-radius: var(--radius-lg);
+    }
+    .gallery-note p { font-size: 0.88rem; color: var(--color-bark); }
+    .gallery-note strong { color: var(--color-gold-dark); }
+
+    @media (max-width: 768px) {
+      .gallery-grid { columns: 2; }
+    }
+    @media (max-width: 480px) {
+      .gallery-grid { columns: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <nav class="nav">
+      <a href="index.html" class="nav__logo">Safari <span>Beauty</span></a>
+      <button class="nav__toggle" id="navToggle" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav__links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="gallery.html" class="active">Gallery</a></li>
+        <li><a href="booking.html">Book Now</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <div class="page-hero">
+      <p class="page-hero__eyebrow">Our Work</p>
+      <h1 class="page-hero__title">The Gallery</h1>
+      <p class="page-hero__subtitle">A look at some of our favorite transformations.</p>
+    </div>
+
+    <section class="section section--alt">
+      <div class="gallery-filters">
+        <button class="filter-btn active">All</button>
+        <button class="filter-btn">Haircuts</button>
+        <button class="filter-btn">Extensions</button>
+        <button class="filter-btn">Color</button>
+        <button class="filter-btn">Treatments</button>
+      </div>
+
+      <!--
+        GALLERY GRID
+        When you have real photos, replace the placeholder divs with:
+        <img src="assets/your-photo.jpg" alt="Description of the photo" />
+        inside each .gallery-item div.
+      -->
+      <div class="gallery-grid">
+        <div class="gallery-item">
+          <div class="gallery-item__placeholder">
+            <span class="gallery-item__icon">✂️</span>
+            <span class="gallery-item__caption">Haircut</span>
+          </div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-item__placeholder">
+            <span class="gallery-item__icon">💇</span>
+            <span class="gallery-item__caption">Extensions</span>
+          </div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-item__placeholder">
+            <span class="gallery-item__icon">🎨</span>
+            <span class="gallery-item__caption">Balayage</span>
+          </div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-item__placeholder">
+            <span class="gallery-item__icon">✂️</span>
+            <span class="gallery-item__caption">Haircut</span>
+          </div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-item__placeholder">
+            <span class="gallery-item__icon">💇</span>
+            <span class="gallery-item__caption">Tape-In Extensions</span>
+          </div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-item__placeholder">
+            <span class="gallery-item__icon">🎨</span>
+            <span class="gallery-item__caption">Full Color</span>
+          </div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-item__placeholder">
+            <span class="gallery-item__icon">🌿</span>
+            <span class="gallery-item__caption">Keratin</span>
+          </div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-item__placeholder">
+            <span class="gallery-item__icon">✂️</span>
+            <span class="gallery-item__caption">Blowout</span>
+          </div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-item__placeholder">
+            <span class="gallery-item__icon">💇</span>
+            <span class="gallery-item__caption">Sew-In</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="gallery-note">
+        <p>📸 <strong>Real photos coming soon!</strong> — Replace the placeholders above with actual salon photos by adding your images to the <code>frontend/assets/</code> folder.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__grid">
+      <div>
+        <p class="footer__logo">Safari <span>Beauty</span></p>
+        <p class="footer__tagline">Modern hair styling and extensions in the heart of South Gate, California.</p>
+      </div>
+      <div>
+        <p class="footer__heading">Pages</p>
+        <ul class="footer__links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="booking.html">Book Now</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer__info">
+        <p class="footer__heading">Visit Us</p>
+        <p>South Gate, CA</p>
+        <p>Mon–Sat: 9am – 7pm</p>
+        <p>Sun: 10am – 5pm</p>
+      </div>
+    </div>
+    <p class="footer__bottom">© 2025 Safari Beauty Salon. All rights reserved.</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    // Filter button interaction (frontend only for now)
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        // When backend is added, this will filter real photos by category
+      });
+    });
+  </script>
+</body>
+</html>

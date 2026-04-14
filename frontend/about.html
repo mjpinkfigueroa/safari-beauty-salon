@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="About Safari Beauty Salon — our story, our team, and our remodeled salon in South Gate, CA." />
+  <title>About | Safari Beauty Salon</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .page-hero { padding: 8rem 5% 4rem; background: var(--color-white); border-bottom: 1px solid var(--color-sand); text-align: center; }
+    .page-hero__eyebrow { font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-gold); margin-bottom: 0.75rem; }
+    .page-hero__title { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 600; color: var(--color-charcoal); margin-bottom: 1rem; }
+    .page-hero__subtitle { font-size: 0.95rem; color: var(--color-muted); max-width: 480px; margin: 0 auto; }
+
+    .about-story {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-md);
+      align-items: center;
+      margin-bottom: var(--space-md);
+    }
+
+    .about-story__image {
+      background: var(--color-sand);
+      border-radius: var(--radius-lg);
+      height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+    }
+
+    .about-story__text h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      font-weight: 600;
+      color: var(--color-charcoal);
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+
+    .about-story__text h2 em { font-style: italic; color: var(--color-gold); }
+
+    .about-story__text p {
+      font-size: 0.92rem;
+      color: var(--color-muted);
+      line-height: 1.9;
+      margin-bottom: 1rem;
+    }
+
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: var(--space-md);
+    }
+
+    .stat {
+      text-align: center;
+      padding: 2rem 1rem;
+      background: var(--color-white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+    }
+
+    .stat__number {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 600;
+      color: var(--color-gold);
+      display: block;
+    }
+
+    .stat__label {
+      font-size: 0.82rem;
+      color: var(--color-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .remodel-section {
+      background: var(--color-charcoal);
+      padding: var(--space-lg) 5%;
+      color: var(--color-sand);
+    }
+
+    .remodel-section h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      font-weight: 600;
+      color: var(--color-white);
+      margin-bottom: 1rem;
+    }
+
+    .remodel-section h2 em { font-style: italic; color: var(--color-gold); }
+
+    .remodel-section p { font-size: 0.92rem; color: var(--color-muted); line-height: 1.9; max-width: 600px; margin-bottom: 1rem; }
+
+    .remodel-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .remodel-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(232, 221, 208, 0.1);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+    }
+
+    .remodel-card__icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
+    .remodel-card__title { font-family: var(--font-display); font-size: 1.1rem; font-weight: 600; color: var(--color-white); margin-bottom: 0.5rem; }
+    .remodel-card__text { font-size: 0.85rem; color: var(--color-muted); line-height: 1.7; }
+
+    @media (max-width: 768px) {
+      .about-story { grid-template-columns: 1fr; }
+      .stat-row { grid-template-columns: 1fr; }
+      .remodel-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <nav class="nav">
+      <a href="index.html" class="nav__logo">Safari <span>Beauty</span></a>
+      <button class="nav__toggle" id="navToggle" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav__links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="booking.html">Book Now</a></li>
+        <li><a href="about.html" class="active">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <div class="page-hero">
+      <p class="page-hero__eyebrow">Our Story</p>
+      <h1 class="page-hero__title">About Safari Beauty</h1>
+      <p class="page-hero__subtitle">From safari roots to modern luxury — this is our journey.</p>
+    </div>
+
+    <section class="section section--alt">
+      <div class="about-story">
+        <div class="about-story__image">🦁</div>
+        <div class="about-story__text">
+          <h2>Born from <em>Passion</em>, Built with Heart</h2>
+          <p>
+            Safari Beauty Salon was founded right here in South Gate, CA with one simple belief:
+            every person deserves to feel beautiful and confident. What started as a bold, safari-themed
+            vision has grown into something even more exciting.
+          </p>
+          <p>
+            Our roots — the warmth, the character, the spirit — are still very much alive.
+            You'll notice subtle nods to our safari beginnings, but now nestled inside a
+            bright, modern, minimalist space that feels as good as it looks.
+          </p>
+          <p>
+            We specialize in hair and extensions because we believe hair is one of the most
+            powerful ways to express yourself. Our stylists are trained, passionate, and ready
+            to make your vision a reality.
+          </p>
+          <a href="booking.html" class="btn btn--primary">Book with Us</a>
+        </div>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat">
+          <span class="stat__number">10+</span>
+          <span class="stat__label">Years in South Gate</span>
+        </div>
+        <div class="stat">
+          <span class="stat__number">500+</span>
+          <span class="stat__label">Happy Clients</span>
+        </div>
+        <div class="stat">
+          <span class="stat__number">100%</span>
+          <span class="stat__label">Passion in Every Cut</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- REMODEL SECTION -->
+    <section class="remodel-section">
+      <h2>A Fresh <em>New Chapter</em></h2>
+      <p>
+        We recently completed a full salon remodel — and we couldn't be more excited to share it
+        with you. The transformation mirrors what we do for our clients every day:
+        elevate what's already beautiful.
+      </p>
+      <div class="remodel-grid">
+        <div class="remodel-card">
+          <div class="remodel-card__icon">🤍</div>
+          <p class="remodel-card__title">Bright White Walls</p>
+          <p class="remodel-card__text">Clean, airy, and modern. The new interior lets your beauty take center stage.</p>
+        </div>
+        <div class="remodel-card">
+          <div class="remodel-card__icon">✨</div>
+          <p class="remodel-card__title">Minimalist Design</p>
+          <p class="remodel-card__text">Less clutter, more calm. A space designed for relaxation and focus.</p>
+        </div>
+        <div class="remodel-card">
+          <div class="remodel-card__icon">🦒</div>
+          <p class="remodel-card__title">Safari Spirit Lives On</p>
+          <p class="remodel-card__text">A few carefully chosen pieces keep our original character alive — the soul of the salon hasn't changed.</p>
+        </div>
+        <div class="remodel-card">
+          <div class="remodel-card__icon">💆</div>
+          <p class="remodel-card__title">Better Experience</p>
+          <p class="remodel-card__text">More comfortable stations, better lighting, and a layout designed for you.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="footer__grid">
+      <div>
+        <p class="footer__logo">Safari <span>Beauty</span></p>
+        <p class="footer__tagline">Modern hair styling and extensions in the heart of South Gate, California.</p>
+      </div>
+      <div>
+        <p class="footer__heading">Pages</p>
+        <ul class="footer__links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="booking.html">Book Now</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer__info">
+        <p class="footer__heading">Visit Us</p>
+        <p>South Gate, CA</p>
+        <p>Mon–Sat: 9am – 7pm</p>
+        <p>Sun: 10am – 5pm</p>
+      </div>
+    </div>
+    <p class="footer__bottom">© 2025 Safari Beauty Salon. All rights reserved.</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

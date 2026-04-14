@@ -1,0 +1,521 @@
+/* ============================================================
+   Safari Beauty Salon — Global Stylesheet
+   
+   TABLE OF CONTENTS:
+   1. Google Fonts Import
+   2. CSS Variables (your color palette & design tokens)
+   3. Reset & Base Styles
+   4. Navigation
+   5. Hero Section
+   6. Buttons
+   7. Section Titles
+   8. Cards
+   9. Footer
+   10. Animations
+   11. Responsive (mobile)
+   ============================================================ */
+
+
+/* ── 1. FONTS ─────────────────────────────────────────────── */
+/* Cormorant Garamond: elegant display font for headings      */
+/* Jost: clean modern sans-serif for body text                */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500&display=swap');
+
+
+/* ── 2. CSS VARIABLES ─────────────────────────────────────── */
+/* Think of variables like named paint swatches.              */
+/* Change a value here and it updates everywhere on the site. */
+:root {
+  /* Colors */
+  --color-white:       #FFFFFF;
+  --color-cream:       #FAF8F5;       /* warm off-white background  */
+  --color-sand:        #E8DDD0;       /* soft beige for accents     */
+  --color-gold:        #C9A96E;       /* warm gold — the hero color */
+  --color-gold-dark:   #A0814A;       /* darker gold for hover      */
+  --color-bark:        #5C4A32;       /* deep brown for text        */
+  --color-charcoal:    #2C2C2C;       /* near-black for headings    */
+  --color-muted:       #8C7B6E;       /* muted brown for subtext    */
+
+  /* Typography */
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body:    'Jost', sans-serif;
+
+  /* Spacing scale */
+  --space-xs:  0.5rem;   /*  8px */
+  --space-sm:  1rem;     /* 16px */
+  --space-md:  2rem;     /* 32px */
+  --space-lg:  4rem;     /* 64px */
+  --space-xl:  6rem;     /* 96px */
+
+  /* Other */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --shadow:    0 4px 24px rgba(92, 74, 50, 0.08);
+  --transition: 0.3s ease;
+}
+
+
+/* ── 3. RESET & BASE ──────────────────────────────────────── */
+/* Removes browser default styling so we start from scratch   */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;   /* smooth scrolling when clicking nav links */
+}
+
+body {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--color-bark);
+  background-color: var(--color-cream);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+
+/* ── 4. NAVIGATION ────────────────────────────────────────── */
+.nav {
+  position: fixed;           /* stays at top when you scroll */
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 5%;
+  background: rgba(250, 248, 245, 0.95);
+  backdrop-filter: blur(8px);    /* frosted glass effect */
+  border-bottom: 1px solid var(--color-sand);
+  transition: var(--transition);
+}
+
+.nav__logo {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-charcoal);
+  letter-spacing: 0.02em;
+}
+
+.nav__logo span {
+  color: var(--color-gold);    /* "Beauty" in gold */
+}
+
+.nav__links {
+  display: flex;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.nav__links a {
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-bark);
+  transition: color var(--transition);
+  position: relative;
+}
+
+/* Underline animation on hover */
+.nav__links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--color-gold);
+  transition: width var(--transition);
+}
+
+.nav__links a:hover { color: var(--color-gold); }
+.nav__links a:hover::after { width: 100%; }
+
+.nav__links a.active { color: var(--color-gold); }
+.nav__links a.active::after { width: 100%; }
+
+/* Mobile hamburger (hidden on desktop) */
+.nav__toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 4px;
+}
+
+.nav__toggle span {
+  display: block;
+  width: 24px;
+  height: 1.5px;
+  background: var(--color-charcoal);
+  transition: var(--transition);
+}
+
+
+/* ── 5. HERO SECTION ──────────────────────────────────────── */
+.hero {
+  min-height: 100vh;              /* full viewport height */
+  display: flex;
+  align-items: center;
+  padding: 8rem 5% 4rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Decorative background pattern */
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -10%;
+  right: -5%;
+  width: 55%;
+  height: 120%;
+  background: var(--color-sand);
+  opacity: 0.4;
+  border-radius: 0 0 0 60% / 0 0 0 40%;
+  z-index: 0;
+}
+
+.hero__content {
+  position: relative;
+  z-index: 1;
+  max-width: 580px;
+}
+
+.hero__eyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  margin-bottom: 1rem;
+}
+
+.hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 6vw, 5rem);  /* scales with screen size */
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--color-charcoal);
+  margin-bottom: 1.5rem;
+}
+
+.hero__title em {
+  font-style: italic;
+  color: var(--color-gold);
+}
+
+.hero__subtitle {
+  font-size: 1rem;
+  color: var(--color-muted);
+  max-width: 420px;
+  margin-bottom: 2.5rem;
+  line-height: 1.8;
+}
+
+.hero__actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Decorative gold line accent */
+.hero__line {
+  position: absolute;
+  bottom: 10%;
+  right: 8%;
+  width: 1px;
+  height: 120px;
+  background: linear-gradient(to bottom, transparent, var(--color-gold));
+  z-index: 1;
+}
+
+
+/* ── 6. BUTTONS ───────────────────────────────────────────── */
+.btn {
+  display: inline-block;
+  padding: 0.85rem 2rem;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  border: 1.5px solid transparent;
+}
+
+.btn--primary {
+  background: var(--color-gold);
+  color: var(--color-white);
+  border-color: var(--color-gold);
+}
+
+.btn--primary:hover {
+  background: var(--color-gold-dark);
+  border-color: var(--color-gold-dark);
+  transform: translateY(-1px);
+}
+
+.btn--outline {
+  background: transparent;
+  color: var(--color-bark);
+  border-color: var(--color-bark);
+}
+
+.btn--outline:hover {
+  background: var(--color-bark);
+  color: var(--color-white);
+  transform: translateY(-1px);
+}
+
+.btn--light {
+  background: var(--color-white);
+  color: var(--color-gold-dark);
+  border-color: var(--color-white);
+}
+
+.btn--light:hover {
+  background: var(--color-cream);
+  transform: translateY(-1px);
+}
+
+
+/* ── 7. SECTION TITLES ────────────────────────────────────── */
+/* Reused across all pages for visual consistency             */
+.section {
+  padding: var(--space-lg) 5%;
+}
+
+.section--alt {
+  background: var(--color-white);    /* alternates between cream & white */
+}
+
+.section__header {
+  text-align: center;
+  max-width: 540px;
+  margin: 0 auto var(--space-md);
+}
+
+.section__eyebrow {
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  margin-bottom: 0.75rem;
+}
+
+.section__title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 600;
+  color: var(--color-charcoal);
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+.section__subtitle {
+  font-size: 0.95rem;
+  color: var(--color-muted);
+  line-height: 1.8;
+}
+
+/* Decorative divider line under eyebrow */
+.section__divider {
+  width: 40px;
+  height: 1px;
+  background: var(--color-gold);
+  margin: 0.75rem auto;
+}
+
+
+/* ── 8. CARDS ─────────────────────────────────────────────── */
+.card {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(92, 74, 50, 0.14);
+}
+
+.card__body {
+  padding: 1.5rem;
+}
+
+.card__label {
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  margin-bottom: 0.5rem;
+}
+
+.card__title {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--color-charcoal);
+  margin-bottom: 0.5rem;
+}
+
+.card__text {
+  font-size: 0.9rem;
+  color: var(--color-muted);
+  line-height: 1.7;
+}
+
+.card__price {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--color-gold-dark);
+  margin-top: 1rem;
+}
+
+
+/* ── 9. FOOTER ────────────────────────────────────────────── */
+.footer {
+  background: var(--color-charcoal);
+  color: var(--color-sand);
+  padding: var(--space-md) 5%;
+}
+
+.footer__grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: var(--space-md);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid rgba(232, 221, 208, 0.15);
+  margin-bottom: var(--space-sm);
+}
+
+.footer__logo {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--color-white);
+  margin-bottom: 0.75rem;
+}
+
+.footer__logo span { color: var(--color-gold); }
+
+.footer__tagline {
+  font-size: 0.85rem;
+  color: var(--color-muted);
+  max-width: 260px;
+  line-height: 1.8;
+}
+
+.footer__heading {
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  margin-bottom: 1rem;
+}
+
+.footer__links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.footer__links a {
+  font-size: 0.88rem;
+  color: var(--color-sand);
+  transition: color var(--transition);
+}
+
+.footer__links a:hover { color: var(--color-gold); }
+
+.footer__info p {
+  font-size: 0.88rem;
+  color: var(--color-sand);
+  margin-bottom: 0.4rem;
+}
+
+.footer__bottom {
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--color-muted);
+}
+
+
+/* ── 10. ANIMATIONS ───────────────────────────────────────── */
+/* Elements fade up when the page loads                       */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-up {
+  opacity: 0;
+  animation: fadeUp 0.7s ease forwards;
+}
+
+.fade-up--delay-1 { animation-delay: 0.1s; }
+.fade-up--delay-2 { animation-delay: 0.25s; }
+.fade-up--delay-3 { animation-delay: 0.4s; }
+.fade-up--delay-4 { animation-delay: 0.55s; }
+
+/* Page transition */
+.page-transition {
+  animation: fadeUp 0.5s ease forwards;
+}
+
+
+/* ── 11. RESPONSIVE ───────────────────────────────────────── */
+/* On screens smaller than 768px (phones), adjust the layout  */
+@media (max-width: 768px) {
+
+  /* Show hamburger, hide links */
+  .nav__toggle { display: flex; }
+  .nav__links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    flex-direction: column;
+    gap: 0;
+    background: var(--color-cream);
+    border-bottom: 1px solid var(--color-sand);
+    padding: 1rem 5%;
+  }
+  .nav__links.open { display: flex; }
+  .nav__links a { padding: 0.75rem 0; }
+
+  .hero { min-height: auto; padding-top: 6rem; }
+  .hero::before { display: none; }
+
+  .footer__grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+  }
+}

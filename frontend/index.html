@@ -18,7 +18,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- SEO: What Google shows in search results -->
-  <meta name="description" content="Safari Beauty Salon — expert hair and extensions in South Gate, CA. Book your appointment today." />
+  <meta name="description"
+    content="Safari Beauty Salon — expert hair and extensions in South Gate, CA. Book your appointment today." />
 
   <title>Safari Beauty Salon | South Gate, CA</title>
 
@@ -49,7 +50,9 @@
     .service-card::before {
       content: '';
       position: absolute;
-      top: 0; left: 0; right: 0;
+      top: 0;
+      left: 0;
+      right: 0;
       height: 3px;
       background: linear-gradient(to right, var(--color-gold), transparent);
     }
@@ -224,9 +227,13 @@
        MAIN CONTENT
   ════════════════════════════════ -->
   <main>
-
     <!-- HERO: First thing visitors see -->
     <section class="hero">
+      <!-- Photo takes up the right side of the hero -->
+      <div class="hero__image">
+        <img src="assets/safariphoto.png" alt="Safari Beauty Salon styling stations" />
+      </div>
+
       <div class="hero__content">
         <p class="hero__eyebrow fade-up">South Gate, California</p>
         <h1 class="hero__title fade-up fade-up--delay-1">
@@ -343,17 +350,20 @@
       <div class="testimonials">
         <div class="testimonial">
           <div class="testimonial__stars">★★★★★</div>
-          <p class="testimonial__text">"The new salon looks absolutely stunning. My extensions look so natural — I get compliments everywhere I go!"</p>
+          <p class="testimonial__text">"The new salon looks absolutely stunning. My extensions look so natural — I get
+            compliments everywhere I go!"</p>
           <span class="testimonial__author">— Maria L., South Gate</span>
         </div>
         <div class="testimonial">
           <div class="testimonial__stars">★★★★★</div>
-          <p class="testimonial__text">"I've been coming here for years. The remodel is beautiful — so bright and modern. The quality never disappoints."</p>
+          <p class="testimonial__text">"I've been coming here for years. The remodel is beautiful — so bright and
+            modern. The quality never disappoints."</p>
           <span class="testimonial__author">— Carmen R., Lynwood</span>
         </div>
         <div class="testimonial">
           <div class="testimonial__stars">★★★★★</div>
-          <p class="testimonial__text">"Booked online in two minutes. Came in and felt like royalty. This is my salon forever."</p>
+          <p class="testimonial__text">"Booked online in two minutes. Came in and felt like royalty. This is my salon
+            forever."</p>
           <span class="testimonial__author">— Jessica T., Huntington Park</span>
         </div>
       </div>
@@ -410,4 +420,5 @@
   <script src="js/main.js"></script>
 
 </body>
+
 </html>

@@ -1,13 +1,20 @@
 <!DOCTYPE html>
 <!--
-  admin.html — Salon Owner's Dashboard
+  admin.html — Sprint 4 Update
   Safari Beauty Salon
 
-  This page is for the salon owner ONLY.
-  It fetches all bookings from the Python backend and displays them.
+  NEW IN SPRINT 4:
+  - Password login screen before any data is shown
+  - "Confirm" and "Cancel" buttons on each booking row
+  - Status badges update in real time without page reload
+  - Bookings filtered by status (All / Pending / Confirmed / Cancelled)
 
-  In a real app you'd add password protection (Sprint 4).
-  For now, it's a simple page that shows all appointments.
+  HOW THE PASSWORD PROTECTION WORKS:
+  When the page loads, it shows a login screen instead of bookings.
+  The owner enters the password → JavaScript sends it to POST /api/admin/login.
+  If Python says success, we store a flag in sessionStorage and show the dashboard.
+  sessionStorage is like a temporary memory that clears when the browser tab closes.
+  This is simple protection — enough for a portfolio project and small business.
 -->
 <html lang="en">
 <head>
@@ -16,7 +23,93 @@
   <title>Admin Dashboard | Safari Beauty Salon</title>
   <link rel="stylesheet" href="css/style.css" />
   <style>
-    body { padding-top: 0; }
+    body { background: var(--color-cream); }
+
+    /* ── LOGIN SCREEN ── */
+    .login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .login-card {
+      background: var(--color-white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      padding: 3rem 2.5rem;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .login-card__logo {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: var(--color-charcoal);
+      margin-bottom: 0.25rem;
+    }
+
+    .login-card__logo span { color: var(--color-gold); }
+
+    .login-card__sub {
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 2.5rem;
+    }
+
+    .login-card input {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      border: 1.5px solid var(--color-sand);
+      border-radius: var(--radius-md);
+      background: var(--color-cream);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      color: var(--color-charcoal);
+      text-align: center;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+      transition: border-color 0.25s;
+    }
+
+    .login-card input:focus {
+      outline: none;
+      border-color: var(--color-gold);
+      background: var(--color-white);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 0.85rem;
+      background: var(--color-gold);
+      color: var(--color-white);
+      border: none;
+      border-radius: var(--radius-md);
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.25s;
+    }
+
+    .login-btn:hover { background: var(--color-gold-dark); }
+
+    .login-error {
+      margin-top: 1rem;
+      font-size: 0.85rem;
+      color: #dc2626;
+      display: none;
+    }
+
+    /* ── DASHBOARD (hidden until logged in) ── */
+    .dashboard { display: none; }
 
     .admin-nav {
       background: var(--color-charcoal);
@@ -35,6 +128,12 @@
 
     .admin-nav__logo span { color: var(--color-gold); }
 
+    .admin-nav__right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
     .admin-badge {
       font-size: 0.72rem;
       letter-spacing: 0.1em;
@@ -45,9 +144,20 @@
       border-radius: 99px;
     }
 
+    .logout-btn {
+      font-size: 0.78rem;
+      color: var(--color-muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .logout-btn:hover { color: var(--color-white); }
+
     .admin-header {
       background: var(--color-cream);
-      padding: 2.5rem 5% 2rem;
+      padding: 2rem 5%;
       border-bottom: 1px solid var(--color-sand);
     }
 
@@ -59,12 +169,9 @@
       margin-bottom: 0.25rem;
     }
 
-    .admin-header p {
-      font-size: 0.88rem;
-      color: var(--color-muted);
-    }
+    .admin-header p { font-size: 0.88rem; color: var(--color-muted); }
 
-    /* Stats row */
+    /* Stats */
     .stats-row {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -95,42 +202,46 @@
       color: var(--color-charcoal);
     }
 
-    /* Bookings table */
-    .table-section {
-      padding: 2rem 5%;
-    }
+    /* Filter tabs */
+    .table-section { padding: 2rem 5%; }
 
-    .table-header {
+    .table-controls {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
 
-    .table-header h2 {
+    .table-controls h2 {
       font-family: var(--font-display);
       font-size: 1.4rem;
       font-weight: 600;
       color: var(--color-charcoal);
     }
 
-    .refresh-btn {
-      padding: 0.5rem 1.25rem;
+    .filter-tabs {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .filter-tab {
+      padding: 0.4rem 1rem;
       border: 1.5px solid var(--color-sand);
-      border-radius: var(--radius-md);
+      border-radius: 99px;
       background: transparent;
       font-family: var(--font-body);
-      font-size: 0.82rem;
+      font-size: 0.78rem;
       color: var(--color-bark);
       cursor: pointer;
       transition: all 0.2s;
     }
 
-    .refresh-btn:hover {
-      border-color: var(--color-gold);
-      color: var(--color-gold-dark);
-    }
+    .filter-tab:hover { border-color: var(--color-gold); color: var(--color-gold-dark); }
+    .filter-tab.active { background: var(--color-gold); border-color: var(--color-gold); color: white; }
 
+    /* Table */
     .bookings-table {
       width: 100%;
       border-collapse: collapse;
@@ -155,10 +266,9 @@
       vertical-align: middle;
     }
 
-    .bookings-table tr:hover td {
-      background: var(--color-cream);
-    }
+    .bookings-table tr:hover td { background: var(--color-cream); }
 
+    /* Status badges */
     .status-badge {
       display: inline-block;
       padding: 0.25rem 0.75rem;
@@ -169,33 +279,46 @@
       letter-spacing: 0.06em;
     }
 
-    .status-badge--pending {
-      background: #FFF8E1;
-      color: #F57F17;
-    }
+    .status-badge--pending   { background: #FFF8E1; color: #F57F17; }
+    .status-badge--confirmed { background: #E8F5E9; color: #2E7D32; }
+    .status-badge--cancelled { background: #FDECEA; color: #C62828; }
 
-    .status-badge--confirmed {
-      background: #E8F5E9;
-      color: #2E7D32;
-    }
+    /* Action buttons */
+    .action-btns { display: flex; gap: 0.4rem; }
 
-    .delete-btn {
-      padding: 0.35rem 0.75rem;
-      border: 1px solid #fca5a5;
+    .action-btn {
+      padding: 0.3rem 0.65rem;
       border-radius: var(--radius-sm);
-      background: #fef2f2;
-      color: #dc2626;
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       cursor: pointer;
       transition: all 0.2s;
+      border: 1px solid;
     }
 
-    .delete-btn:hover {
-      background: #dc2626;
-      color: white;
+    .action-btn--confirm {
+      border-color: #86efac;
+      background: #f0fdf4;
+      color: #16a34a;
     }
 
-    /* Loading and empty states */
+    .action-btn--confirm:hover { background: #16a34a; color: white; }
+
+    .action-btn--cancel {
+      border-color: #fca5a5;
+      background: #fef2f2;
+      color: #dc2626;
+    }
+
+    .action-btn--cancel:hover { background: #dc2626; color: white; }
+
+    .action-btn--delete {
+      border-color: var(--color-sand);
+      background: transparent;
+      color: var(--color-muted);
+    }
+
+    .action-btn--delete:hover { background: var(--color-charcoal); color: white; border-color: var(--color-charcoal); }
+
     .state-message {
       text-align: center;
       padding: 3rem;
@@ -203,127 +326,261 @@
       font-size: 0.95rem;
     }
 
-    .state-message span {
-      display: block;
-      font-size: 2.5rem;
-      margin-bottom: 0.75rem;
-    }
+    .state-message span { display: block; font-size: 2.5rem; margin-bottom: 0.75rem; }
 
     @media (max-width: 768px) {
       .stats-row { grid-template-columns: 1fr 1fr; }
       .bookings-table { display: block; overflow-x: auto; }
+      .filter-tabs { flex-wrap: wrap; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Admin-specific nav (no public links) -->
-  <nav class="admin-nav">
-    <span class="admin-nav__logo">Safari <span>Beauty</span></span>
-    <span class="admin-badge">Admin Dashboard</span>
-  </nav>
+  <!-- ════════════════════════════════
+       LOGIN SCREEN
+       Shown first — hidden after correct password
+  ════════════════════════════════ -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-card">
+      <p class="login-card__logo">Safari <span>Beauty</span></p>
+      <p class="login-card__sub">Admin Access</p>
 
-  <div class="admin-header">
-    <h1>Appointments</h1>
-    <p>All bookings submitted through the website.</p>
-  </div>
+      <input
+        type="password"
+        id="passwordInput"
+        placeholder="Enter admin password"
+        autocomplete="current-password"
+      />
 
-  <!-- Stats Row -->
-  <div class="stats-row">
-    <div class="stat-card">
-      <p class="stat-card__label">Total Bookings</p>
-      <p class="stat-card__value" id="statTotal">—</p>
-    </div>
-    <div class="stat-card">
-      <p class="stat-card__label">Today</p>
-      <p class="stat-card__value" id="statToday">—</p>
-    </div>
-    <div class="stat-card">
-      <p class="stat-card__label">This Week</p>
-      <p class="stat-card__value" id="statWeek">—</p>
-    </div>
-    <div class="stat-card">
-      <p class="stat-card__label">Pending</p>
-      <p class="stat-card__value" id="statPending">—</p>
+      <button class="login-btn" onclick="attemptLogin()">Enter Dashboard</button>
+
+      <p class="login-error" id="loginError">
+        ❌ Incorrect password. Please try again.
+      </p>
     </div>
   </div>
 
-  <!-- Bookings Table -->
-  <div class="table-section">
-    <div class="table-header">
-      <h2>All Bookings</h2>
-      <button class="refresh-btn" onclick="loadBookings()">↻ Refresh</button>
+
+  <!-- ════════════════════════════════
+       DASHBOARD
+       Hidden until login succeeds
+  ════════════════════════════════ -->
+  <div class="dashboard" id="dashboard">
+
+    <nav class="admin-nav">
+      <span class="admin-nav__logo">Safari <span>Beauty</span></span>
+      <div class="admin-nav__right">
+        <span class="admin-badge">Admin</span>
+        <button class="logout-btn" onclick="logout()">Log out</button>
+      </div>
+    </nav>
+
+    <div class="admin-header">
+      <h1>Appointments</h1>
+      <p id="lastUpdated">Loading...</p>
     </div>
 
-    <div id="tableContainer">
-      <div class="state-message">
-        <span>⏳</span>
-        Loading bookings...
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <p class="stat-card__label">Total</p>
+        <p class="stat-card__value" id="statTotal">—</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-card__label">Pending</p>
+        <p class="stat-card__value" id="statPending">—</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-card__label">Confirmed</p>
+        <p class="stat-card__value" id="statConfirmed">—</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-card__label">Today</p>
+        <p class="stat-card__value" id="statToday">—</p>
       </div>
     </div>
-  </div>
+
+    <!-- Table -->
+    <div class="table-section">
+      <div class="table-controls">
+        <h2>All Bookings</h2>
+        <div class="filter-tabs">
+          <button class="filter-tab active" onclick="filterBookings('all', this)">All</button>
+          <button class="filter-tab" onclick="filterBookings('pending', this)">Pending</button>
+          <button class="filter-tab" onclick="filterBookings('confirmed', this)">Confirmed</button>
+          <button class="filter-tab" onclick="filterBookings('cancelled', this)">Cancelled</button>
+        </div>
+      </div>
+
+      <div id="tableContainer">
+        <div class="state-message"><span>⏳</span>Loading bookings...</div>
+      </div>
+    </div>
+
+  </div><!-- end .dashboard -->
+
 
   <script>
     const API_URL = 'http://localhost:5000/api';
 
-    // ── LOAD ALL BOOKINGS FROM BACKEND ─────────────────────────
-    async function loadBookings() {
-      const container = document.getElementById('tableContainer');
-      container.innerHTML = '<div class="state-message"><span>⏳</span>Loading...</div>';
+    // Stores all bookings so we can filter without re-fetching
+    let allBookings = [];
+    let currentFilter = 'all';
+
+
+    // ── LOGIN ──────────────────────────────────────────────────────
+    async function attemptLogin() {
+      const password = document.getElementById('passwordInput').value;
+      const errorEl  = document.getElementById('loginError');
 
       try {
-        const response = await fetch(`${API_URL}/bookings`);
-        const data = await response.json();
+        const response = await fetch(`${API_URL}/admin/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password })
+        });
 
-        if (!data.success) {
-          throw new Error(data.error);
+        const result = await response.json();
+
+        if (result.success) {
+          // Store login state for this browser session
+          // sessionStorage clears automatically when the tab closes
+          sessionStorage.setItem('adminLoggedIn', 'true');
+          showDashboard();
+        } else {
+          errorEl.style.display = 'block';
+          document.getElementById('passwordInput').value = '';
         }
-
-        if (data.bookings.length === 0) {
-          container.innerHTML = `
-            <div class="state-message">
-              <span>📭</span>
-              No bookings yet. They will appear here once clients book online.
-            </div>
-          `;
-          updateStats([]);
-          return;
-        }
-
-        renderTable(data.bookings);
-        updateStats(data.bookings);
 
       } catch (err) {
-        container.innerHTML = `
+        errorEl.textContent = '❌ Cannot reach the server. Is the backend running?';
+        errorEl.style.display = 'block';
+      }
+    }
+
+    // Allow pressing Enter to submit the password
+    document.getElementById('passwordInput').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') attemptLogin();
+    });
+
+
+    // ── SHOW / HIDE SCREENS ────────────────────────────────────────
+    function showDashboard() {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+      loadBookings();
+    }
+
+    function logout() {
+      sessionStorage.removeItem('adminLoggedIn');
+      document.getElementById('loginScreen').style.display = 'flex';
+      document.getElementById('dashboard').style.display = 'none';
+      document.getElementById('passwordInput').value = '';
+      document.getElementById('loginError').style.display = 'none';
+    }
+
+    // If already logged in this session, skip the login screen
+    if (sessionStorage.getItem('adminLoggedIn') === 'true') {
+      showDashboard();
+    }
+
+
+    // ── LOAD BOOKINGS ──────────────────────────────────────────────
+    async function loadBookings() {
+      try {
+        const response = await fetch(`${API_URL}/bookings`);
+        const data     = await response.json();
+
+        if (!data.success) throw new Error(data.error);
+
+        allBookings = data.bookings;
+        renderTable(allBookings, currentFilter);
+        updateStats(allBookings);
+
+        const now = new Date().toLocaleTimeString();
+        document.getElementById('lastUpdated').textContent = `Last updated: ${now}`;
+
+      } catch (err) {
+        document.getElementById('tableContainer').innerHTML = `
           <div class="state-message">
             <span>❌</span>
-            Could not connect to the backend.<br>
-            Make sure your Python server is running:<br>
-            <code style="font-size:0.82rem;color:var(--color-gold-dark);">python backend/app.py</code>
+            Could not connect to backend.<br>
+            Make sure your server is running:<br>
+            <code style="color:var(--color-gold-dark);font-size:0.82rem;">python backend/app.py</code>
           </div>
         `;
       }
     }
 
-    // ── BUILD THE BOOKINGS TABLE ────────────────────────────────
-    function renderTable(bookings) {
+
+    // ── FILTER BOOKINGS ────────────────────────────────────────────
+    function filterBookings(status, btn) {
+      currentFilter = status;
+      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      renderTable(allBookings, status);
+    }
+
+
+    // ── RENDER TABLE ───────────────────────────────────────────────
+    function renderTable(bookings, filter) {
       const container = document.getElementById('tableContainer');
 
-      // Build table HTML
-      const rows = bookings.map(b => `
-        <tr>
-          <td><strong>${b.first_name} ${b.last_name}</strong><br>
-              <span style="font-size:0.8rem;color:var(--color-muted);">${b.email}</span></td>
-          <td>${b.service}</td>
-          <td>${b.date}</td>
-          <td>${b.time}</td>
-          <td>${b.stylist || 'Any'}</td>
-          <td><span class="status-badge status-badge--${b.status || 'pending'}">${b.status || 'pending'}</span></td>
-          <td>
-            <button class="delete-btn" onclick="deleteBooking(${b.id}, this)">Delete</button>
-          </td>
-        </tr>
-      `).join('');
+      // Apply filter
+      const filtered = filter === 'all'
+        ? bookings
+        : bookings.filter(b => (b.status || 'pending') === filter);
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="state-message">
+            <span>📭</span>
+            No ${filter === 'all' ? '' : filter} bookings yet.
+          </div>
+        `;
+        return;
+      }
+
+      const rows = filtered.map(b => {
+        const status = b.status || 'pending';
+        return `
+          <tr id="row-${b.id}">
+            <td>
+              <strong>${b.first_name} ${b.last_name}</strong><br>
+              <span style="font-size:0.8rem;color:var(--color-muted);">${b.email}</span><br>
+              <span style="font-size:0.8rem;color:var(--color-muted);">${b.phone || ''}</span>
+            </td>
+            <td>${b.service}</td>
+            <td>${b.date}</td>
+            <td>${b.time}</td>
+            <td>${b.stylist || 'Any'}</td>
+            <td>
+              <span class="status-badge status-badge--${status}" id="badge-${b.id}">
+                ${status}
+              </span>
+            </td>
+            <td>
+              <div class="action-btns">
+                <button class="action-btn action-btn--confirm"
+                  onclick="updateStatus(${b.id}, 'confirmed')"
+                  ${status === 'confirmed' ? 'disabled style="opacity:0.4"' : ''}>
+                  ✓ Confirm
+                </button>
+                <button class="action-btn action-btn--cancel"
+                  onclick="updateStatus(${b.id}, 'cancelled')"
+                  ${status === 'cancelled' ? 'disabled style="opacity:0.4"' : ''}>
+                  ✕ Cancel
+                </button>
+                <button class="action-btn action-btn--delete"
+                  onclick="deleteBooking(${b.id})">
+                  Delete
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
 
       container.innerHTML = `
         <table class="bookings-table">
@@ -335,7 +592,7 @@
               <th>Time</th>
               <th>Stylist</th>
               <th>Status</th>
-              <th>Action</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>${rows}</tbody>
@@ -343,29 +600,39 @@
       `;
     }
 
-    // ── UPDATE STAT CARDS ───────────────────────────────────────
-    function updateStats(bookings) {
-      const today = new Date().toISOString().split('T')[0];
 
-      // Get date 7 days ago
-      const weekAgo = new Date();
-      weekAgo.setDate(weekAgo.getDate() - 7);
-      const weekAgoStr = weekAgo.toISOString().split('T')[0];
+    // ── UPDATE STATUS ──────────────────────────────────────────────
+    async function updateStatus(id, newStatus) {
+      try {
+        const response = await fetch(`${API_URL}/bookings/${id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: newStatus })
+        });
 
-      const total   = bookings.length;
-      const todayN  = bookings.filter(b => b.date === today).length;
-      const weekN   = bookings.filter(b => b.date >= weekAgoStr).length;
-      const pending = bookings.filter(b => (b.status || 'pending') === 'pending').length;
+        const result = await response.json();
 
-      document.getElementById('statTotal').textContent   = total;
-      document.getElementById('statToday').textContent   = todayN;
-      document.getElementById('statWeek').textContent    = weekN;
-      document.getElementById('statPending').textContent = pending;
+        if (result.success) {
+          // Update the booking in our local array
+          const booking = allBookings.find(b => b.id === id);
+          if (booking) booking.status = newStatus;
+
+          // Re-render with the same filter
+          renderTable(allBookings, currentFilter);
+          updateStats(allBookings);
+        } else {
+          alert('Error: ' + result.error);
+        }
+
+      } catch (err) {
+        alert('Network error. Is the backend running?');
+      }
     }
 
-    // ── DELETE A BOOKING ────────────────────────────────────────
-    async function deleteBooking(id, btn) {
-      if (!confirm('Are you sure you want to delete this booking?')) return;
+
+    // ── DELETE BOOKING ─────────────────────────────────────────────
+    async function deleteBooking(id) {
+      if (!confirm('Permanently delete this booking?')) return;
 
       try {
         const response = await fetch(`${API_URL}/bookings/${id}`, {
@@ -374,18 +641,34 @@
         const result = await response.json();
 
         if (result.success) {
-          // Remove the row from the table without reloading the whole page
-          btn.closest('tr').remove();
+          // Remove from local array and re-render
+          allBookings = allBookings.filter(b => b.id !== id);
+          renderTable(allBookings, currentFilter);
+          updateStats(allBookings);
         } else {
-          alert('Error deleting booking: ' + result.error);
+          alert('Error: ' + result.error);
         }
+
       } catch (err) {
         alert('Network error. Is the backend running?');
       }
     }
 
-    // Load bookings when page loads
-    loadBookings();
+
+    // ── UPDATE STATS ───────────────────────────────────────────────
+    function updateStats(bookings) {
+      const today = new Date().toISOString().split('T')[0];
+
+      document.getElementById('statTotal').textContent =
+        bookings.length;
+      document.getElementById('statPending').textContent =
+        bookings.filter(b => (b.status || 'pending') === 'pending').length;
+      document.getElementById('statConfirmed').textContent =
+        bookings.filter(b => b.status === 'confirmed').length;
+      document.getElementById('statToday').textContent =
+        bookings.filter(b => b.date === today).length;
+    }
+
   </script>
 </body>
 </html>

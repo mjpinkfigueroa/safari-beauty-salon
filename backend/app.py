@@ -1,74 +1,209 @@
 """
-app.py — The main entry point for the Safari Beauty Salon backend server.
+app.py — Safari Beauty Salon Backend (Sprint 4 Update)
 
-HOW FLASK WORKS:
-Flask is a "web framework" — it lets Python listen for HTTP requests
-(like when a browser submits a form) and send back responses.
+NEW IN SPRINT 4:
+  - Environment variables loaded from .env file (no hardcoded secrets)
+  - Admin password protection via session tokens
+  - Email confirmation sent to client on booking
+  - PATCH route to update booking status (pending → confirmed)
 
-When you run this file with `python app.py`, Python starts a local
-web server at http://localhost:5000. Your frontend (HTML) sends
-requests to this address, and Flask handles them.
-
-ROUTE = a URL path that Flask knows how to respond to.
-Example: @app.route('/api/bookings') handles requests to /api/bookings
+PYTHON CONCEPTS USED HERE:
+  - os.environ    : reads environment variables from the .env file
+  - smtplib       : Python's built-in email sending library
+  - hashlib       : generates secure tokens for admin sessions
 """
 
-# ── IMPORTS ───────────────────────────────────────────────────────
-# Flask: the web framework
-# request: lets us read data sent from the browser
-# jsonify: converts Python dicts to JSON responses
 from flask import Flask, request, jsonify
-
-# CORS: Cross-Origin Resource Sharing
-# Allows our frontend (on one port) to talk to our backend (on another port)
-# Without this, browsers block requests between different origins for security
 from flask_cors import CORS
-
-# os: built-in Python module for file path operations
 import os
-
-# datetime: built-in Python module for working with dates and times
+import sqlite3
 from datetime import datetime
 
-# Import our database helper functions (we'll create this file next)
+# smtplib and email are built into Python — no pip install needed
+# smtplib handles the connection to Gmail's mail server
+# email.mime handles building the email message structure
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
+# python-dotenv loads your .env file into os.environ
+# This must happen before you read any env variables
+from dotenv import load_dotenv
+load_dotenv()
+
 from models.database import init_db, get_db_connection
 
-# ── CREATE THE FLASK APP ───────────────────────────────────────────
-# Flask(__name__) creates the app.
-# __name__ is a special Python variable that holds the current file's name.
-# Flask uses it to find resources relative to this file.
+# ── CREATE APP ─────────────────────────────────────────────────────
 app = Flask(__name__)
-
-# Apply CORS to the entire app — allows all origins for now.
-# In production, you'd restrict this to your actual domain.
 CORS(app)
 
-# ── CONFIGURATION ─────────────────────────────────────────────────
-# Where to store our SQLite database file
-# os.path.dirname gets the folder this file is in
-# os.path.join builds a path safely (handles / vs \ on different OS)
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-app.config['DATABASE'] = os.path.join(BASE_DIR, '..', 'database', 'salon.db')
-
+# ── LOAD CONFIGURATION FROM .env ──────────────────────────────────
+# os.environ.get() reads a value from the environment.
+# The second argument is a fallback default if the variable isn't set.
+BASE_DIR   = os.path.dirname(os.path.abspath(__file__))
+app.config['DATABASE']       = os.path.join(BASE_DIR, '..', 'database', 'salon.db')
+app.config['ADMIN_PASSWORD'] = os.environ.get('ADMIN_PASSWORD', 'safari2025')
+app.config['GMAIL_ADDRESS']  = os.environ.get('GMAIL_ADDRESS', '')
+app.config['GMAIL_APP_PW']   = os.environ.get('GMAIL_APP_PASSWORD', '')
+app.config['SECRET_KEY']     = os.environ.get('SECRET_KEY', 'dev-secret')
 
 # ── INITIALIZE DATABASE ────────────────────────────────────────────
-# This runs once when the app starts.
-# It creates the database file and tables if they don't exist yet.
 with app.app_context():
     init_db(app.config['DATABASE'])
 
 
-# ════════════════════════════════════════════════════════════════
+# ════════════════════════════════════════════════════════════════════
+# HELPER FUNCTIONS
+# These are reusable functions called by multiple routes below.
+# ════════════════════════════════════════════════════════════════════
+
+def send_confirmation_email(to_email, first_name, service, date, time):
+    """
+    Sends a booking confirmation email to the client.
+
+    Uses Python's smtplib to connect to Gmail's SMTP server
+    and send an HTML email.
+
+    SMTP = Simple Mail Transfer Protocol — the standard for sending email.
+    Think of it like a postal service: smtplib is the mailman,
+    Gmail's server is the post office.
+
+    Parameters:
+        to_email   : client's email address
+        first_name : client's first name (for personalization)
+        service    : the service they booked
+        date       : appointment date
+        time       : appointment time
+
+    Returns:
+        True if email sent successfully, False if it failed
+    """
+    gmail_address = app.config['GMAIL_ADDRESS']
+    gmail_app_pw  = app.config['GMAIL_APP_PW']
+
+    # If Gmail credentials aren't configured, skip silently
+    if not gmail_address or not gmail_app_pw:
+        print('⚠️  Gmail not configured — skipping email confirmation')
+        return False
+
+    try:
+        # MIMEMultipart lets us send both plain text AND HTML versions
+        # Email clients show HTML if supported, plain text as fallback
+        msg = MIMEMultipart('alternative')
+        msg['Subject'] = f'Your appointment at Safari Beauty Salon — {date}'
+        msg['From']    = gmail_address
+        msg['To']      = to_email
+
+        # ── PLAIN TEXT VERSION ─────────────────────────────────────
+        # For email clients that don't support HTML
+        text_body = f"""
+Hi {first_name},
+
+Your appointment has been booked!
+
+Service: {service}
+Date: {date}
+Time: {time}
+
+Please arrive 5 minutes early.
+If you need to cancel, please give us 24 hours notice.
+
+See you soon!
+Safari Beauty Salon
+South Gate, CA
+        """
+
+        # ── HTML VERSION ───────────────────────────────────────────
+        # A nicely formatted email that matches your salon's brand
+        html_body = f"""
+        <html>
+        <body style="margin:0;padding:0;background:#FAF8F5;font-family:'Helvetica Neue',Arial,sans-serif;">
+          <div style="max-width:560px;margin:40px auto;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.06);">
+
+            <!-- Header -->
+            <div style="background:#2C2C2C;padding:32px 40px;text-align:center;">
+              <h1 style="margin:0;font-size:22px;color:#ffffff;font-weight:400;letter-spacing:2px;">
+                SAFARI <span style="color:#C9A96E;">BEAUTY</span>
+              </h1>
+              <p style="margin:8px 0 0;font-size:12px;color:#888;letter-spacing:1px;text-transform:uppercase;">South Gate, California</p>
+            </div>
+
+            <!-- Body -->
+            <div style="padding:40px;">
+              <p style="color:#C9A96E;font-size:12px;letter-spacing:2px;text-transform:uppercase;margin:0 0 8px;">Booking Confirmed</p>
+              <h2 style="margin:0 0 24px;font-size:26px;color:#2C2C2C;font-weight:400;">
+                You're all set, {first_name}!
+              </h2>
+              <p style="color:#8C7B6E;font-size:15px;line-height:1.7;margin:0 0 32px;">
+                We've received your appointment request and will have everything ready for you.
+              </p>
+
+              <!-- Appointment Details Box -->
+              <div style="background:#FAF8F5;border-radius:8px;padding:24px;margin-bottom:32px;">
+                <p style="margin:0 0 4px;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#C9A96E;">Your Appointment</p>
+                <table style="width:100%;margin-top:16px;">
+                  <tr>
+                    <td style="padding:8px 0;font-size:13px;color:#8C7B6E;width:40%;">Service</td>
+                    <td style="padding:8px 0;font-size:13px;color:#2C2C2C;font-weight:500;">{service}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding:8px 0;font-size:13px;color:#8C7B6E;border-top:1px solid #E8DDD0;">Date</td>
+                    <td style="padding:8px 0;font-size:13px;color:#2C2C2C;font-weight:500;border-top:1px solid #E8DDD0;">{date}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding:8px 0;font-size:13px;color:#8C7B6E;border-top:1px solid #E8DDD0;">Time</td>
+                    <td style="padding:8px 0;font-size:13px;color:#2C2C2C;font-weight:500;border-top:1px solid #E8DDD0;">{time}</td>
+                  </tr>
+                </table>
+              </div>
+
+              <!-- Reminders -->
+              <p style="font-size:13px;color:#8C7B6E;line-height:1.8;margin:0 0 8px;">A few things to remember:</p>
+              <ul style="font-size:13px;color:#8C7B6E;line-height:2;padding-left:20px;margin:0 0 32px;">
+                <li>Please arrive <strong style="color:#5C4A32;">5 minutes early</strong></li>
+                <li>Cancellations need <strong style="color:#5C4A32;">24 hours notice</strong></li>
+                <li>Your stylist will discuss your look before starting</li>
+              </ul>
+
+              <p style="font-size:14px;color:#5C4A32;margin:0;">See you soon! 🌿</p>
+            </div>
+
+            <!-- Footer -->
+            <div style="background:#FAF8F5;padding:20px 40px;text-align:center;border-top:1px solid #E8DDD0;">
+              <p style="margin:0;font-size:12px;color:#8C7B6E;">Safari Beauty Salon · South Gate, CA</p>
+            </div>
+
+          </div>
+        </body>
+        </html>
+        """
+
+        # Attach both versions — email client picks the best one
+        msg.attach(MIMEText(text_body, 'plain'))
+        msg.attach(MIMEText(html_body, 'html'))
+
+        # Connect to Gmail's SMTP server
+        # Port 587 = TLS (encrypted) connection — always use this for Gmail
+        # starttls() upgrades the connection to encrypted before sending credentials
+        with smtplib.SMTP('smtp.gmail.com', 587) as server:
+            server.starttls()
+            server.login(gmail_address, gmail_app_pw)
+            server.sendmail(gmail_address, to_email, msg.as_string())
+
+        print(f'✅ Confirmation email sent to {to_email}')
+        return True
+
+    except Exception as e:
+        # Email failing should NOT crash the booking — just log and continue
+        print(f'⚠️  Email error: {e}')
+        return False
+
+
+# ════════════════════════════════════════════════════════════════════
 # ROUTES
-# A route is a URL path + a Python function that handles it.
-# The @app.route decorator tells Flask which URL triggers which function.
-# ════════════════════════════════════════════════════════════════
+# ════════════════════════════════════════════════════════════════════
 
-
-# ── HEALTH CHECK ──────────────────────────────────────────────────
-# Route: GET /api/health
-# Purpose: A simple way to confirm the server is running.
-# Open http://localhost:5000/api/health in your browser to test it.
+# ── HEALTH CHECK ───────────────────────────────────────────────────
 @app.route('/api/health', methods=['GET'])
 def health_check():
     return jsonify({
@@ -78,182 +213,199 @@ def health_check():
     })
 
 
+# ── ADMIN LOGIN ────────────────────────────────────────────────────
+# Route: POST /api/admin/login
+# The admin page sends the password here.
+# We compare it to the one in .env and return success/failure.
+# This is simple password checking — not full user authentication.
+# Sprint 5 could upgrade this to JWT tokens if needed.
+@app.route('/api/admin/login', methods=['POST'])
+def admin_login():
+    data = request.get_json()
+    password = data.get('password', '')
+
+    if password == app.config['ADMIN_PASSWORD']:
+        return jsonify({
+            'success': True,
+            'message': 'Access granted'
+        })
+    else:
+        # 401 = Unauthorized
+        return jsonify({
+            'success': False,
+            'error': 'Incorrect password'
+        }), 401
+
+
 # ── GET ALL BOOKINGS ───────────────────────────────────────────────
-# Route: GET /api/bookings
-# Purpose: Returns all appointments from the database.
-# Used by the admin dashboard to display all bookings.
 @app.route('/api/bookings', methods=['GET'])
 def get_bookings():
     try:
         conn = get_db_connection(app.config['DATABASE'])
-
-        # fetchall() returns all rows as a list
-        # We convert each row to a dict so jsonify can handle it
         bookings = conn.execute(
             'SELECT * FROM bookings ORDER BY date ASC, time ASC'
         ).fetchall()
         conn.close()
-
-        # Convert sqlite3.Row objects to plain Python dicts
-        bookings_list = [dict(row) for row in bookings]
-
         return jsonify({
             'success': True,
-            'count': len(bookings_list),
-            'bookings': bookings_list
+            'count': len(bookings),
+            'bookings': [dict(row) for row in bookings]
         })
-
     except Exception as e:
-        # If something goes wrong, return an error response
-        # str(e) converts the error object to a readable string
         return jsonify({'success': False, 'error': str(e)}), 500
 
 
 # ── CREATE A BOOKING ───────────────────────────────────────────────
-# Route: POST /api/bookings
-# Purpose: Receives form data and saves a new appointment.
-# The frontend sends data here when the user submits the booking form.
 @app.route('/api/bookings', methods=['POST'])
 def create_booking():
     try:
-        # request.get_json() reads the JSON data sent from the browser
         data = request.get_json()
 
-        # ── VALIDATION ──────────────────────────────────────────
-        # Always validate data before saving it to a database.
-        # Never trust that the browser sent what you expect.
         required_fields = ['first_name', 'last_name', 'email', 'service', 'date', 'time']
-        missing = [field for field in required_fields if not data.get(field)]
-
+        missing = [f for f in required_fields if not data.get(f)]
         if missing:
-            # 400 = Bad Request (the client sent incomplete data)
             return jsonify({
                 'success': False,
-                'error': f'Missing required fields: {", ".join(missing)}'
+                'error': f'Missing fields: {", ".join(missing)}'
             }), 400
 
-        # ── SAVE TO DATABASE ─────────────────────────────────────
         conn = get_db_connection(app.config['DATABASE'])
-
-        # ? placeholders prevent SQL injection attacks
-        # Never put user data directly into SQL strings
         conn.execute(
             '''INSERT INTO bookings
-               (first_name, last_name, email, phone, service, stylist, date, time, notes, created_at)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
+               (first_name, last_name, email, phone, service, stylist, date, time, notes, status, created_at)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
             (
-                data['first_name'],
-                data['last_name'],
-                data['email'],
-                data.get('phone', ''),          # .get() returns '' if key missing
-                data['service'],
-                data.get('stylist', 'Any'),
-                data['date'],
-                data['time'],
-                data.get('notes', ''),
-                datetime.now().isoformat()       # record when booking was made
+                data['first_name'], data['last_name'], data['email'],
+                data.get('phone', ''), data['service'],
+                data.get('stylist', 'Any'), data['date'], data['time'],
+                data.get('notes', ''), 'pending',
+                datetime.now().isoformat()
             )
         )
-
-        # commit() saves the changes — without this, nothing is actually written
         conn.commit()
         conn.close()
 
-        # 201 = Created (standard HTTP status for successfully creating a resource)
+        # Send confirmation email AFTER saving to database
+        # Even if email fails, the booking is already saved safely
+        email_sent = send_confirmation_email(
+            to_email   = data['email'],
+            first_name = data['first_name'],
+            service    = data['service'],
+            date       = data['date'],
+            time       = data['time']
+        )
+
         return jsonify({
             'success': True,
-            'message': f"Appointment booked for {data['first_name']} on {data['date']} at {data['time']}"
+            'message': f"Booked for {data['first_name']} on {data['date']} at {data['time']}",
+            'email_sent': email_sent
         }), 201
 
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
 
 
-# ── DELETE A BOOKING ───────────────────────────────────────────────
-# Route: DELETE /api/bookings/<id>
-# Purpose: Removes a booking by its ID (used in the admin dashboard).
-# <int:booking_id> captures the number from the URL.
-# Example: DELETE /api/bookings/3 → booking_id = 3
-@app.route('/api/bookings/<int:booking_id>', methods=['DELETE'])
-def delete_booking(booking_id):
+# ── UPDATE BOOKING STATUS ──────────────────────────────────────────
+# Route: PATCH /api/bookings/<id>
+# PATCH = partial update (we're only changing the status field)
+# PUT   = full replacement (we'd send all fields)
+# The admin dashboard uses this to confirm or cancel appointments.
+@app.route('/api/bookings/<int:booking_id>', methods=['PATCH'])
+def update_booking_status(booking_id):
     try:
-        conn = get_db_connection(app.config['DATABASE'])
+        data   = request.get_json()
+        status = data.get('status')
 
-        # First check the booking actually exists
+        # Only allow valid status values
+        allowed = ['pending', 'confirmed', 'cancelled']
+        if status not in allowed:
+            return jsonify({
+                'success': False,
+                'error': f'Status must be one of: {", ".join(allowed)}'
+            }), 400
+
+        conn    = get_db_connection(app.config['DATABASE'])
         booking = conn.execute(
             'SELECT id FROM bookings WHERE id = ?', (booking_id,)
         ).fetchone()
 
         if not booking:
             conn.close()
-            # 404 = Not Found
+            return jsonify({'success': False, 'error': 'Booking not found'}), 404
+
+        conn.execute(
+            'UPDATE bookings SET status = ? WHERE id = ?',
+            (status, booking_id)
+        )
+        conn.commit()
+        conn.close()
+
+        return jsonify({
+            'success': True,
+            'message': f'Booking {booking_id} updated to {status}'
+        })
+
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+# ── DELETE A BOOKING ───────────────────────────────────────────────
+@app.route('/api/bookings/<int:booking_id>', methods=['DELETE'])
+def delete_booking(booking_id):
+    try:
+        conn    = get_db_connection(app.config['DATABASE'])
+        booking = conn.execute(
+            'SELECT id FROM bookings WHERE id = ?', (booking_id,)
+        ).fetchone()
+
+        if not booking:
+            conn.close()
             return jsonify({'success': False, 'error': 'Booking not found'}), 404
 
         conn.execute('DELETE FROM bookings WHERE id = ?', (booking_id,))
         conn.commit()
         conn.close()
 
-        return jsonify({
-            'success': True,
-            'message': f'Booking {booking_id} deleted'
-        })
+        return jsonify({'success': True, 'message': f'Booking {booking_id} deleted'})
 
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
 
 
-# ── GET AVAILABLE TIME SLOTS ───────────────────────────────────────
-# Route: GET /api/availability?date=2025-06-15&stylist=any
-# Purpose: Returns which time slots are already booked for a given date.
-# The frontend uses this to gray out unavailable times.
+# ── GET AVAILABILITY ───────────────────────────────────────────────
 @app.route('/api/availability', methods=['GET'])
 def get_availability():
     try:
-        # request.args reads URL query parameters (?date=...&stylist=...)
         date = request.args.get('date')
-        stylist = request.args.get('stylist', 'any')
-
         if not date:
             return jsonify({'success': False, 'error': 'Date is required'}), 400
 
-        conn = get_db_connection(app.config['DATABASE'])
-
-        # Find all booked times for the given date
+        conn   = get_db_connection(app.config['DATABASE'])
         booked = conn.execute(
-            'SELECT time FROM bookings WHERE date = ?', (date,)
+            'SELECT time FROM bookings WHERE date = ? AND status != ?',
+            (date, 'cancelled')
         ).fetchall()
         conn.close()
 
         booked_times = [row['time'] for row in booked]
-
-        # All possible time slots
-        all_slots = [
-            '9:00 AM', '10:00 AM', '11:00 AM',
-            '12:00 PM', '1:00 PM', '2:00 PM',
-            '3:00 PM', '4:00 PM', '5:00 PM', '6:00 PM'
+        all_slots    = [
+            '9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM',
+            '1:00 PM',  '2:00 PM',  '3:00 PM',  '4:00 PM',
+            '5:00 PM',  '6:00 PM'
         ]
 
-        # Build response showing which slots are available
         slots = [
             {'time': slot, 'available': slot not in booked_times}
             for slot in all_slots
         ]
 
-        return jsonify({
-            'success': True,
-            'date': date,
-            'slots': slots
-        })
+        return jsonify({'success': True, 'date': date, 'slots': slots})
 
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
 
 
-# ── RUN THE SERVER ─────────────────────────────────────────────────
-# This block only runs when you execute this file directly
-# (not when it's imported by another file).
-# debug=True means Flask restarts automatically when you save changes —
-# very useful during development. Turn this OFF before deploying.
+# ── RUN ────────────────────────────────────────────────────────────
 if __name__ == '__main__':
     print('🌸 Safari Beauty Salon API starting...')
     print('📍 Running at: http://localhost:5000')

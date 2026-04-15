@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<!--
+  admin.html — Salon Owner's Dashboard
+  Safari Beauty Salon
+
+  This page is for the salon owner ONLY.
+  It fetches all bookings from the Python backend and displays them.
+
+  In a real app you'd add password protection (Sprint 4).
+  For now, it's a simple page that shows all appointments.
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard | Safari Beauty Salon</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    body { padding-top: 0; }
+
+    .admin-nav {
+      background: var(--color-charcoal);
+      padding: 1rem 5%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .admin-nav__logo {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--color-white);
+    }
+
+    .admin-nav__logo span { color: var(--color-gold); }
+
+    .admin-badge {
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: var(--color-gold);
+      color: var(--color-white);
+      padding: 0.3rem 0.75rem;
+      border-radius: 99px;
+    }
+
+    .admin-header {
+      background: var(--color-cream);
+      padding: 2.5rem 5% 2rem;
+      border-bottom: 1px solid var(--color-sand);
+    }
+
+    .admin-header h1 {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--color-charcoal);
+      margin-bottom: 0.25rem;
+    }
+
+    .admin-header p {
+      font-size: 0.88rem;
+      color: var(--color-muted);
+    }
+
+    /* Stats row */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      padding: 1.5rem 5%;
+      background: var(--color-white);
+      border-bottom: 1px solid var(--color-sand);
+    }
+
+    .stat-card {
+      background: var(--color-cream);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.25rem;
+    }
+
+    .stat-card__label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .stat-card__value {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: var(--color-charcoal);
+    }
+
+    /* Bookings table */
+    .table-section {
+      padding: 2rem 5%;
+    }
+
+    .table-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+    }
+
+    .table-header h2 {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--color-charcoal);
+    }
+
+    .refresh-btn {
+      padding: 0.5rem 1.25rem;
+      border: 1.5px solid var(--color-sand);
+      border-radius: var(--radius-md);
+      background: transparent;
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      color: var(--color-bark);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .refresh-btn:hover {
+      border-color: var(--color-gold);
+      color: var(--color-gold-dark);
+    }
+
+    .bookings-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+
+    .bookings-table th {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-muted);
+      border-bottom: 1px solid var(--color-sand);
+      background: var(--color-cream);
+    }
+
+    .bookings-table td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--color-sand);
+      color: var(--color-bark);
+      vertical-align: middle;
+    }
+
+    .bookings-table tr:hover td {
+      background: var(--color-cream);
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 99px;
+      font-size: 0.72rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .status-badge--pending {
+      background: #FFF8E1;
+      color: #F57F17;
+    }
+
+    .status-badge--confirmed {
+      background: #E8F5E9;
+      color: #2E7D32;
+    }
+
+    .delete-btn {
+      padding: 0.35rem 0.75rem;
+      border: 1px solid #fca5a5;
+      border-radius: var(--radius-sm);
+      background: #fef2f2;
+      color: #dc2626;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .delete-btn:hover {
+      background: #dc2626;
+      color: white;
+    }
+
+    /* Loading and empty states */
+    .state-message {
+      text-align: center;
+      padding: 3rem;
+      color: var(--color-muted);
+      font-size: 0.95rem;
+    }
+
+    .state-message span {
+      display: block;
+      font-size: 2.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    @media (max-width: 768px) {
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .bookings-table { display: block; overflow-x: auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Admin-specific nav (no public links) -->
+  <nav class="admin-nav">
+    <span class="admin-nav__logo">Safari <span>Beauty</span></span>
+    <span class="admin-badge">Admin Dashboard</span>
+  </nav>
+
+  <div class="admin-header">
+    <h1>Appointments</h1>
+    <p>All bookings submitted through the website.</p>
+  </div>
+
+  <!-- Stats Row -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <p class="stat-card__label">Total Bookings</p>
+      <p class="stat-card__value" id="statTotal">—</p>
+    </div>
+    <div class="stat-card">
+      <p class="stat-card__label">Today</p>
+      <p class="stat-card__value" id="statToday">—</p>
+    </div>
+    <div class="stat-card">
+      <p class="stat-card__label">This Week</p>
+      <p class="stat-card__value" id="statWeek">—</p>
+    </div>
+    <div class="stat-card">
+      <p class="stat-card__label">Pending</p>
+      <p class="stat-card__value" id="statPending">—</p>
+    </div>
+  </div>
+
+  <!-- Bookings Table -->
+  <div class="table-section">
+    <div class="table-header">
+      <h2>All Bookings</h2>
+      <button class="refresh-btn" onclick="loadBookings()">↻ Refresh</button>
+    </div>
+
+    <div id="tableContainer">
+      <div class="state-message">
+        <span>⏳</span>
+        Loading bookings...
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = 'http://localhost:5000/api';
+
+    // ── LOAD ALL BOOKINGS FROM BACKEND ─────────────────────────
+    async function loadBookings() {
+      const container = document.getElementById('tableContainer');
+      container.innerHTML = '<div class="state-message"><span>⏳</span>Loading...</div>';
+
+      try {
+        const response = await fetch(`${API_URL}/bookings`);
+        const data = await response.json();
+
+        if (!data.success) {
+          throw new Error(data.error);
+        }
+
+        if (data.bookings.length === 0) {
+          container.innerHTML = `
+            <div class="state-message">
+              <span>📭</span>
+              No bookings yet. They will appear here once clients book online.
+            </div>
+          `;
+          updateStats([]);
+          return;
+        }
+
+        renderTable(data.bookings);
+        updateStats(data.bookings);
+
+      } catch (err) {
+        container.innerHTML = `
+          <div class="state-message">
+            <span>❌</span>
+            Could not connect to the backend.<br>
+            Make sure your Python server is running:<br>
+            <code style="font-size:0.82rem;color:var(--color-gold-dark);">python backend/app.py</code>
+          </div>
+        `;
+      }
+    }
+
+    // ── BUILD THE BOOKINGS TABLE ────────────────────────────────
+    function renderTable(bookings) {
+      const container = document.getElementById('tableContainer');
+
+      // Build table HTML
+      const rows = bookings.map(b => `
+        <tr>
+          <td><strong>${b.first_name} ${b.last_name}</strong><br>
+              <span style="font-size:0.8rem;color:var(--color-muted);">${b.email}</span></td>
+          <td>${b.service}</td>
+          <td>${b.date}</td>
+          <td>${b.time}</td>
+          <td>${b.stylist || 'Any'}</td>
+          <td><span class="status-badge status-badge--${b.status || 'pending'}">${b.status || 'pending'}</span></td>
+          <td>
+            <button class="delete-btn" onclick="deleteBooking(${b.id}, this)">Delete</button>
+          </td>
+        </tr>
+      `).join('');
+
+      container.innerHTML = `
+        <table class="bookings-table">
+          <thead>
+            <tr>
+              <th>Client</th>
+              <th>Service</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Stylist</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+    }
+
+    // ── UPDATE STAT CARDS ───────────────────────────────────────
+    function updateStats(bookings) {
+      const today = new Date().toISOString().split('T')[0];
+
+      // Get date 7 days ago
+      const weekAgo = new Date();
+      weekAgo.setDate(weekAgo.getDate() - 7);
+      const weekAgoStr = weekAgo.toISOString().split('T')[0];
+
+      const total   = bookings.length;
+      const todayN  = bookings.filter(b => b.date === today).length;
+      const weekN   = bookings.filter(b => b.date >= weekAgoStr).length;
+      const pending = bookings.filter(b => (b.status || 'pending') === 'pending').length;
+
+      document.getElementById('statTotal').textContent   = total;
+      document.getElementById('statToday').textContent   = todayN;
+      document.getElementById('statWeek').textContent    = weekN;
+      document.getElementById('statPending').textContent = pending;
+    }
+
+    // ── DELETE A BOOKING ────────────────────────────────────────
+    async function deleteBooking(id, btn) {
+      if (!confirm('Are you sure you want to delete this booking?')) return;
+
+      try {
+        const response = await fetch(`${API_URL}/bookings/${id}`, {
+          method: 'DELETE'
+        });
+        const result = await response.json();
+
+        if (result.success) {
+          // Remove the row from the table without reloading the whole page
+          btn.closest('tr').remove();
+        } else {
+          alert('Error deleting booking: ' + result.error);
+        }
+      } catch (err) {
+        alert('Network error. Is the backend running?');
+      }
+    }
+
+    // Load bookings when page loads
+    loadBookings();
+  </script>
+</body>
+</html>

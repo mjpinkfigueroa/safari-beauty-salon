@@ -15,3 +15,6 @@ Thumbs.db
 # Database (local only)
 *.db
 *.sqlite3
+
+# Virtual environment
+venv/

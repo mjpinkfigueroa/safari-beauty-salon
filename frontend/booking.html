@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,9 +14,29 @@
       border-bottom: 1px solid var(--color-sand);
       text-align: center;
     }
-    .page-hero__eyebrow { font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-gold); margin-bottom: 0.75rem; }
-    .page-hero__title { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 600; color: var(--color-charcoal); margin-bottom: 1rem; }
-    .page-hero__subtitle { font-size: 0.95rem; color: var(--color-muted); max-width: 480px; margin: 0 auto; }
+
+    .page-hero__eyebrow {
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--color-gold);
+      margin-bottom: 0.75rem;
+    }
+
+    .page-hero__title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 600;
+      color: var(--color-charcoal);
+      margin-bottom: 1rem;
+    }
+
+    .page-hero__subtitle {
+      font-size: 0.95rem;
+      color: var(--color-muted);
+      max-width: 480px;
+      margin: 0 auto;
+    }
 
     /* ── BOOKING LAYOUT ── */
     .booking-layout {
@@ -236,12 +257,21 @@
     }
 
     @media (max-width: 768px) {
-      .booking-layout { grid-template-columns: 1fr; }
-      .form-row { grid-template-columns: 1fr; }
-      .time-slots { grid-template-columns: repeat(3, 1fr); }
+      .booking-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .time-slots {
+        grid-template-columns: repeat(3, 1fr);
+      }
     }
   </style>
 </head>
+
 <body>
 
   <header>
@@ -451,6 +481,7 @@
   </footer>
 
   <script src="js/main.js"></script>
+  <script src="js/booking.js"></script>
   <script>
     // Store selected time in hidden input
     function selectTime(el, time) {
@@ -466,10 +497,11 @@
     dateInput.setAttribute('min', today);
 
     // Form submit (placeholder — will connect to Python API in Sprint 3)
-    document.getElementById('bookingForm').addEventListener('submit', function(e) {
+    document.getElementById('bookingForm').addEventListener('submit', function (e) {
       e.preventDefault();
       alert('Thank you! Your appointment request has been received. We will confirm within 1 hour. (Backend coming in Sprint 3!)');
     });
   </script>
 </body>
+
 </html>

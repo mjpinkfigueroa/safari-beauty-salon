@@ -1,87 +1,48 @@
-/* ============================================================
-   Safari Beauty Salon — Global Stylesheet
-   
-   TABLE OF CONTENTS:
-   1. Google Fonts Import
-   2. CSS Variables (your color palette & design tokens)
-   3. Reset & Base Styles
-   4. Navigation
-   5. Hero Section
-   6. Buttons
-   7. Section Titles
-   8. Cards
-   9. Footer
-   10. Animations
-   11. Responsive (mobile)
-   ============================================================ */
-
-
-/* ── 1. FONTS ─────────────────────────────────────────────── */
-/* Cormorant Garamond: elegant display font for headings      */
-/* Jost: clean modern sans-serif for body text                */
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500&display=swap');
 
-
-/* ── 2. CSS VARIABLES ─────────────────────────────────────── */
-/* Think of variables like named paint swatches.              */
-/* Change a value here and it updates everywhere on the site. */
+/* ── CSS VARIABLES ── */
 :root {
-  /* Colors */
-  --color-white: #FFFFFF;
-  --color-cream: #FAF8F5;
-  /* warm off-white background  */
-  --color-sand: #E8DDD0;
-  /* soft beige for accents     */
-  --color-gold: #C9A96E;
-  /* warm gold — the hero color */
-  --color-gold-dark: #A0814A;
-  /* darker gold for hover      */
-  --color-bark: #5C4A32;
-  /* deep brown for text        */
-  --color-charcoal: #2C2C2C;
-  /* near-black for headings    */
-  --color-muted: #8C7B6E;
-  /* muted brown for subtext    */
+  --color-white:      #FFFFFF;
+  --color-offwhite:   #F8F8F8;
+  --color-light:      #EFEFEF;
+  --color-silver:     #C8C8C8;
+  --color-mid:        #8A8A8A;
+  --color-charcoal:   #2C2C2C;
+  --color-black:      #1A1A1A;
+  --color-accent:     #B0926A;
+  --color-accent-dk:  #8A6E4A;
 
-  /* Typography */
+  --color-cream:      #F8F8F8;
+  --color-sand:       #E0E0E0;
+  --color-muted:      #8A8A8A;
+  --color-bark:       #3A3A3A;
+  --color-gold:       #B0926A;
+  --color-gold-dark:  #8A6E4A;
+
   --font-display: 'Cormorant Garamond', Georgia, serif;
-  --font-body: 'Jost', sans-serif;
+  --font-body:    'Jost', sans-serif;
 
-  /* Spacing scale */
   --space-xs: 0.5rem;
-  /*  8px */
   --space-sm: 1rem;
-  /* 16px */
   --space-md: 2rem;
-  /* 32px */
   --space-lg: 4rem;
-  /* 64px */
   --space-xl: 6rem;
-  /* 96px */
 
-  /* Other */
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 16px;
-  --shadow: 0 4px 24px rgba(92, 74, 50, 0.08);
+  --shadow:    0 4px 24px rgba(0, 0, 0, 0.08);
   --transition: 0.3s ease;
 }
 
-
-/* ── 3. RESET & BASE ──────────────────────────────────────── */
-/* Removes browser default styling so we start from scratch   */
-*,
-*::before,
-*::after {
+/* ── RESET & BASE ── */
+*, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-html {
-  scroll-behavior: smooth;
-  /* smooth scrolling when clicking nav links */
-}
+html { scroll-behavior: smooth; }
 
 body {
   font-family: var(--font-body);
@@ -89,40 +50,26 @@ body {
   font-size: 16px;
   line-height: 1.7;
   color: var(--color-bark);
-  background-color: var(--color-cream);
+  background-color: var(--color-offwhite);
 }
 
-img {
-  max-width: 100%;
-  display: block;
-}
+img   { max-width: 100%; display: block; }
+a     { text-decoration: none; color: inherit; }
+ul    { list-style: none; }
 
-a {
-  text-decoration: none;
-  color: inherit;
-}
-
-ul {
-  list-style: none;
-}
-
-
-/* ── 4. NAVIGATION ────────────────────────────────────────── */
+/* ── NAVIGATION ── */
 .nav {
   position: fixed;
-  /* stays at top when you scroll */
-  top: 0;
-  left: 0;
+  top: 0; left: 0;
   width: 100%;
   z-index: 100;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 1.2rem 5%;
-  background: rgba(250, 248, 245, 0.95);
+  background: rgba(255, 255, 255, 0.96);
   backdrop-filter: blur(8px);
-  /* frosted glass effect */
-  border-bottom: 1px solid var(--color-sand);
+  border-bottom: 1px solid var(--color-light);
   transition: var(--transition);
 }
 
@@ -134,10 +81,7 @@ ul {
   letter-spacing: 0.02em;
 }
 
-.nav__logo span {
-  color: var(--color-gold);
-  /* "Beauty" in gold */
-}
+.nav__logo span { color: var(--color-accent); }
 
 .nav__links {
   display: flex;
@@ -150,40 +94,26 @@ ul {
   font-weight: 400;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--color-bark);
+  color: var(--color-charcoal);
   transition: color var(--transition);
   position: relative;
 }
 
-/* Underline animation on hover */
 .nav__links a::after {
   content: '';
   position: absolute;
-  bottom: -4px;
-  left: 0;
-  width: 0;
-  height: 1px;
-  background: var(--color-gold);
+  bottom: -4px; left: 0;
+  width: 0; height: 1px;
+  background: var(--color-charcoal);
   transition: width var(--transition);
 }
 
-.nav__links a:hover {
-  color: var(--color-gold);
-}
+.nav__links a:hover,
+.nav__links a.active { color: var(--color-charcoal); }
 
-.nav__links a:hover::after {
-  width: 100%;
-}
+.nav__links a:hover::after,
+.nav__links a.active::after { width: 100%; }
 
-.nav__links a.active {
-  color: var(--color-gold);
-}
-
-.nav__links a.active::after {
-  width: 100%;
-}
-
-/* Mobile hamburger (hidden on desktop) */
 .nav__toggle {
   display: none;
   flex-direction: column;
@@ -202,31 +132,20 @@ ul {
   transition: var(--transition);
 }
 
-
-/* ── 5. HERO SECTION ──────────────────────────────────────── */
+/* ── HERO ── */
 .hero {
-  min-height: 100vh;
-  /* full viewport height */
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   align-items: center;
+  gap: 3rem;
   padding: 8rem 5% 4rem;
   position: relative;
   overflow: hidden;
+  min-height: 100vh;
+  background: var(--color-white);
 }
 
-/* Decorative background pattern */
-.hero::before {
-  content: '';
-  position: absolute;
-  top: -10%;
-  right: -5%;
-  width: 55%;
-  height: 120%;
-  background: var(--color-sand);
-  opacity: 0.4;
-  border-radius: 0 0 0 60% / 0 0 0 40%;
-  z-index: 0;
-}
+.hero::before { display: none; }
 
 .hero__content {
   position: relative;
@@ -238,28 +157,27 @@ ul {
   font-size: 0.75rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--color-gold);
+  color: var(--color-mid);
   margin-bottom: 1rem;
 }
 
 .hero__title {
   font-family: var(--font-display);
   font-size: clamp(3rem, 6vw, 5rem);
-  /* scales with screen size */
   font-weight: 600;
   line-height: 1.1;
-  color: var(--color-charcoal);
+  color: var(--color-black);
   margin-bottom: 1.5rem;
 }
 
 .hero__title em {
   font-style: italic;
-  color: var(--color-gold);
+  color: var(--color-accent);
 }
 
 .hero__subtitle {
   font-size: 1rem;
-  color: var(--color-muted);
+  color: var(--color-mid);
   max-width: 420px;
   margin-bottom: 2.5rem;
   line-height: 1.8;
@@ -271,19 +189,43 @@ ul {
   flex-wrap: wrap;
 }
 
-/* Decorative gold line accent */
 .hero__line {
   position: absolute;
-  bottom: 10%;
-  right: 8%;
-  width: 1px;
-  height: 120px;
-  background: linear-gradient(to bottom, transparent, var(--color-gold));
+  bottom: 10%; right: 8%;
+  width: 1px; height: 120px;
+  background: linear-gradient(to bottom, transparent, var(--color-silver));
   z-index: 1;
 }
 
+.hero__image {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.14);
+}
 
-/* ── 6. BUTTONS ───────────────────────────────────────────── */
+.hero__image img {
+  width: 100%;
+  height: 520px;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  border-radius: var(--radius-lg);
+  transition: transform 0.6s ease;
+}
+
+.hero__image:hover img { transform: scale(1.03); }
+
+.hero__image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-lg);
+  border: 2px solid rgba(200, 200, 200, 0.3);
+  pointer-events: none;
+}
+
+/* ── BUTTONS ── */
 .btn {
   display: inline-block;
   padding: 0.85rem 2rem;
@@ -299,51 +241,43 @@ ul {
 }
 
 .btn--primary {
-  background: var(--color-gold);
+  background: var(--color-charcoal);
   color: var(--color-white);
-  border-color: var(--color-gold);
+  border-color: var(--color-charcoal);
 }
 
 .btn--primary:hover {
-  background: var(--color-gold-dark);
-  border-color: var(--color-gold-dark);
+  background: var(--color-black);
+  border-color: var(--color-black);
   transform: translateY(-1px);
 }
 
 .btn--outline {
   background: transparent;
-  color: var(--color-bark);
-  border-color: var(--color-bark);
+  color: var(--color-charcoal);
+  border-color: var(--color-charcoal);
 }
 
 .btn--outline:hover {
-  background: var(--color-bark);
+  background: var(--color-charcoal);
   color: var(--color-white);
   transform: translateY(-1px);
 }
 
 .btn--light {
   background: var(--color-white);
-  color: var(--color-gold-dark);
+  color: var(--color-charcoal);
   border-color: var(--color-white);
 }
 
 .btn--light:hover {
-  background: var(--color-cream);
+  background: var(--color-light);
   transform: translateY(-1px);
 }
 
-
-/* ── 7. SECTION TITLES ────────────────────────────────────── */
-/* Reused across all pages for visual consistency             */
-.section {
-  padding: var(--space-lg) 5%;
-}
-
-.section--alt {
-  background: var(--color-white);
-  /* alternates between cream & white */
-}
+/* ── SECTIONS ── */
+.section { padding: var(--space-lg) 5%; }
+.section--alt { background: var(--color-white); }
 
 .section__header {
   text-align: center;
@@ -355,7 +289,7 @@ ul {
   font-size: 0.72rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--color-gold);
+  color: var(--color-mid);
   margin-bottom: 0.75rem;
 }
 
@@ -363,27 +297,25 @@ ul {
   font-family: var(--font-display);
   font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 600;
-  color: var(--color-charcoal);
+  color: var(--color-black);
   line-height: 1.2;
   margin-bottom: 1rem;
 }
 
 .section__subtitle {
   font-size: 0.95rem;
-  color: var(--color-muted);
+  color: var(--color-mid);
   line-height: 1.8;
 }
 
-/* Decorative divider line under eyebrow */
 .section__divider {
   width: 40px;
   height: 1px;
-  background: var(--color-gold);
+  background: var(--color-silver);
   margin: 0.75rem auto;
 }
 
-
-/* ── 8. CARDS ─────────────────────────────────────────────── */
+/* ── CARDS ── */
 .card {
   background: var(--color-white);
   border-radius: var(--radius-lg);
@@ -394,18 +326,16 @@ ul {
 
 .card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(92, 74, 50, 0.14);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
 }
 
-.card__body {
-  padding: 1.5rem;
-}
+.card__body   { padding: 1.5rem; }
 
 .card__label {
   font-size: 0.72rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--color-gold);
+  color: var(--color-mid);
   margin-bottom: 0.5rem;
 }
 
@@ -419,22 +349,21 @@ ul {
 
 .card__text {
   font-size: 0.9rem;
-  color: var(--color-muted);
+  color: var(--color-mid);
   line-height: 1.7;
 }
 
 .card__price {
   font-size: 1.1rem;
   font-weight: 500;
-  color: var(--color-gold-dark);
+  color: var(--color-accent);
   margin-top: 1rem;
 }
 
-
-/* ── 9. FOOTER ────────────────────────────────────────────── */
+/* ── FOOTER ── */
 .footer {
-  background: var(--color-charcoal);
-  color: var(--color-sand);
+  background: var(--color-black);
+  color: var(--color-silver);
   padding: var(--space-md) 5%;
 }
 
@@ -443,7 +372,7 @@ ul {
   grid-template-columns: 2fr 1fr 1fr;
   gap: var(--space-md);
   padding-bottom: var(--space-md);
-  border-bottom: 1px solid rgba(232, 221, 208, 0.15);
+  border-bottom: 1px solid rgba(200, 200, 200, 0.12);
   margin-bottom: var(--space-sm);
 }
 
@@ -454,13 +383,11 @@ ul {
   margin-bottom: 0.75rem;
 }
 
-.footer__logo span {
-  color: var(--color-gold);
-}
+.footer__logo span  { color: var(--color-accent); }
 
 .footer__tagline {
   font-size: 0.85rem;
-  color: var(--color-muted);
+  color: var(--color-mid);
   max-width: 260px;
   line-height: 1.8;
 }
@@ -469,7 +396,7 @@ ul {
   font-size: 0.72rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--color-gold);
+  color: var(--color-silver);
   margin-bottom: 1rem;
 }
 
@@ -481,184 +408,38 @@ ul {
 
 .footer__links a {
   font-size: 0.88rem;
-  color: var(--color-sand);
+  color: var(--color-mid);
   transition: color var(--transition);
 }
 
-.footer__links a:hover {
-  color: var(--color-gold);
-}
+.footer__links a:hover { color: var(--color-white); }
 
 .footer__info p {
   font-size: 0.88rem;
-  color: var(--color-sand);
+  color: var(--color-mid);
   margin-bottom: 0.4rem;
 }
 
 .footer__bottom {
   text-align: center;
   font-size: 0.78rem;
-  color: var(--color-muted);
+  color: var(--color-mid);
 }
 
-
-/* ── 10. ANIMATIONS ───────────────────────────────────────── */
-/* Elements fade up when the page loads                       */
+/* ── ANIMATIONS ── */
 @keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-.fade-up {
-  opacity: 0;
-  animation: fadeUp 0.7s ease forwards;
-}
+.fade-up { opacity: 0; animation: fadeUp 0.7s ease forwards; }
+.fade-up--delay-1 { animation-delay: 0.1s; }
+.fade-up--delay-2 { animation-delay: 0.25s; }
+.fade-up--delay-3 { animation-delay: 0.4s; }
+.fade-up--delay-4 { animation-delay: 0.55s; }
+.page-transition  { animation: fadeUp 0.5s ease forwards; }
 
-.fade-up--delay-1 {
-  animation-delay: 0.1s;
-}
-
-.fade-up--delay-2 {
-  animation-delay: 0.25s;
-}
-
-.fade-up--delay-3 {
-  animation-delay: 0.4s;
-}
-
-.fade-up--delay-4 {
-  animation-delay: 0.55s;
-}
-
-/* Page transition */
-.page-transition {
-  animation: fadeUp 0.5s ease forwards;
-}
-
-
-/* ── 11. RESPONSIVE ───────────────────────────────────────── */
-/* On screens smaller than 768px (phones), adjust the layout  */
-@media (max-width: 768px) {
-
-  /* Show hamburger, hide links */
-  .nav__toggle {
-    display: flex;
-  }
-
-  .nav__links {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    flex-direction: column;
-    gap: 0;
-    background: var(--color-cream);
-    border-bottom: 1px solid var(--color-sand);
-    padding: 1rem 5%;
-  }
-
-  .nav__links.open {
-    display: flex;
-  }
-
-  .nav__links a {
-    padding: 0.75rem 0;
-  }
-
-  .hero {
-    min-height: auto;
-    padding-top: 6rem;
-  }
-
-  .hero::before {
-    display: none;
-  }
-
-  .footer__grid {
-    grid-template-columns: 1fr;
-    gap: var(--space-sm);
-  }
-}
-
-/* ── HERO PHOTO ───────────────────────────────────────────── */
-.hero {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: center;
-  gap: 3rem;
-  padding: 8rem 5% 4rem;
-  position: relative;
-  overflow: hidden;
-  min-height: 100vh;
-}
-
-/* Remove the old background shape since photo replaces it */
-.hero::before {
-  display: none;
-}
-
-.hero__image {
-  position: relative;
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  box-shadow: 0 24px 60px rgba(92, 74, 50, 0.18);
-}
-
-.hero__image img {
-  width: 100%;
-  height: 520px;
-  object-fit: cover;
-  /* crops photo to fill the space perfectly */
-  object-position: center;
-  /* keeps the center of the photo visible */
-  display: block;
-  border-radius: var(--radius-lg);
-  transition: transform 0.6s ease;
-}
-
-.hero__image:hover img {
-  transform: scale(1.03);
-  /* subtle zoom on hover */
-}
-
-/* Gold frame accent around the photo */
-.hero__image::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: var(--radius-lg);
-  border: 2px solid rgba(201, 169, 110, 0.3);
-  pointer-events: none;
-}
-
-/* On mobile, stack vertically and shrink photo */
-@media (max-width: 768px) {
-  .hero {
-    grid-template-columns: 1fr;
-    min-height: auto;
-    padding-top: 6rem;
-  }
-
-  .hero__image {
-    order: -1;
-  }
-
-  /* photo appears above text on mobile */
-
-  .hero__image img {
-    height: 260px;
-  }
-}
-
-/* ── REAL GALLERY PHOTOS ──────────────────────────────────── */
+/* ── GALLERY PHOTOS ── */
 .gallery-item img {
   width: 100%;
   display: block;
@@ -668,5 +449,39 @@ ul {
 
 .gallery-item img:hover {
   transform: scale(1.02);
-  box-shadow: 0 12px 40px rgba(92, 74, 50, 0.18);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.14);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .nav__toggle { display: flex; }
+
+  .nav__links {
+    display: none;
+    position: absolute;
+    top: 100%; left: 0;
+    width: 100%;
+    flex-direction: column;
+    gap: 0;
+    background: var(--color-white);
+    border-bottom: 1px solid var(--color-light);
+    padding: 1rem 5%;
+  }
+
+  .nav__links.open { display: flex; }
+  .nav__links a    { padding: 0.75rem 0; }
+
+  .hero {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    padding-top: 6rem;
+  }
+
+  .hero__image         { order: -1; }
+  .hero__image img     { height: 260px; }
+
+  .footer__grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+  }
 }

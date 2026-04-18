@@ -1,40 +1,21 @@
 <!DOCTYPE html>
-<!--
-  admin.html — Sprint 4 Update
-  Safari Beauty Salon
-
-  NEW IN SPRINT 4:
-  - Password login screen before any data is shown
-  - "Confirm" and "Cancel" buttons on each booking row
-  - Status badges update in real time without page reload
-  - Bookings filtered by status (All / Pending / Confirmed / Cancelled)
-
-  HOW THE PASSWORD PROTECTION WORKS:
-  When the page loads, it shows a login screen instead of bookings.
-  The owner enters the password → JavaScript sends it to POST /api/admin/login.
-  If Python says success, we store a flag in sessionStorage and show the dashboard.
-  sessionStorage is like a temporary memory that clears when the browser tab closes.
-  This is simple protection — enough for a portfolio project and small business.
--->
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Dashboard | Safari Beauty Salon</title>
   <link rel="stylesheet" href="css/style.css" />
   <style>
-    body {
-      background: var(--color-cream);
-    }
+    body { background: var(--color-offwhite); }
 
-    /* ── LOGIN SCREEN ── */
+    /* ── LOGIN ── */
     .login-screen {
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 2rem;
+      background: var(--color-offwhite);
     }
 
     .login-card {
@@ -51,28 +32,26 @@
       font-family: var(--font-display);
       font-size: 1.8rem;
       font-weight: 600;
-      color: var(--color-charcoal);
+      color: var(--color-black);
       margin-bottom: 0.25rem;
     }
 
-    .login-card__logo span {
-      color: var(--color-gold);
-    }
+    .login-card__logo span { color: var(--color-accent); }
 
     .login-card__sub {
       font-size: 0.78rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--color-muted);
+      color: var(--color-mid);
       margin-bottom: 2.5rem;
     }
 
     .login-card input {
       width: 100%;
       padding: 0.85rem 1rem;
-      border: 1.5px solid var(--color-sand);
+      border: 1.5px solid var(--color-light);
       border-radius: var(--radius-md);
-      background: var(--color-cream);
+      background: var(--color-offwhite);
       font-family: var(--font-body);
       font-size: 0.95rem;
       color: var(--color-charcoal);
@@ -84,14 +63,14 @@
 
     .login-card input:focus {
       outline: none;
-      border-color: var(--color-gold);
+      border-color: var(--color-charcoal);
       background: var(--color-white);
     }
 
     .login-btn {
       width: 100%;
       padding: 0.85rem;
-      background: var(--color-gold);
+      background: var(--color-charcoal);
       color: var(--color-white);
       border: none;
       border-radius: var(--radius-md);
@@ -104,9 +83,7 @@
       transition: background 0.25s;
     }
 
-    .login-btn:hover {
-      background: var(--color-gold-dark);
-    }
+    .login-btn:hover { background: var(--color-black); }
 
     .login-error {
       margin-top: 1rem;
@@ -115,13 +92,11 @@
       display: none;
     }
 
-    /* ── DASHBOARD (hidden until logged in) ── */
-    .dashboard {
-      display: none;
-    }
+    /* ── DASHBOARD ── */
+    .dashboard { display: none; }
 
     .admin-nav {
-      background: var(--color-charcoal);
+      background: var(--color-black);
       padding: 1rem 5%;
       display: flex;
       align-items: center;
@@ -135,9 +110,7 @@
       color: var(--color-white);
     }
 
-    .admin-nav__logo span {
-      color: var(--color-gold);
-    }
+    .admin-nav__logo span { color: var(--color-accent); }
 
     .admin-nav__right {
       display: flex;
@@ -149,65 +122,107 @@
       font-size: 0.72rem;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      background: var(--color-gold);
-      color: var(--color-white);
+      background: var(--color-charcoal);
+      color: var(--color-silver);
       padding: 0.3rem 0.75rem;
       border-radius: 99px;
+      border: 1px solid rgba(255,255,255,0.1);
     }
 
     .logout-btn {
       font-size: 0.78rem;
-      color: var(--color-muted);
+      color: var(--color-mid);
       background: none;
       border: none;
       cursor: pointer;
       transition: color 0.2s;
     }
 
-    .logout-btn:hover {
-      color: var(--color-white);
-    }
+    .logout-btn:hover { color: var(--color-white); }
 
+    /* Header */
     .admin-header {
-      background: var(--color-cream);
-      padding: 2rem 5%;
-      border-bottom: 1px solid var(--color-sand);
+      background: var(--color-white);
+      padding: 1.5rem 5%;
+      border-bottom: 1px solid var(--color-light);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
 
-    .admin-header h1 {
+    .admin-header__left h1 {
       font-family: var(--font-display);
-      font-size: 2rem;
+      font-size: 1.8rem;
       font-weight: 600;
-      color: var(--color-charcoal);
-      margin-bottom: 0.25rem;
+      color: var(--color-black);
+      margin-bottom: 0.2rem;
     }
 
-    .admin-header p {
-      font-size: 0.88rem;
-      color: var(--color-muted);
+    .admin-header__left p {
+      font-size: 0.82rem;
+      color: var(--color-mid);
+    }
+
+    .admin-header__actions {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .admin-btn {
+      padding: 0.55rem 1.1rem;
+      border-radius: var(--radius-md);
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.05em;
+    }
+
+    .admin-btn--primary {
+      background: var(--color-charcoal);
+      color: var(--color-white);
+      border: 1px solid var(--color-charcoal);
+    }
+
+    .admin-btn--primary:hover { background: var(--color-black); }
+
+    .admin-btn--outline {
+      background: transparent;
+      color: var(--color-charcoal);
+      border: 1px solid var(--color-light);
+    }
+
+    .admin-btn--outline:hover {
+      border-color: var(--color-charcoal);
+      background: var(--color-offwhite);
     }
 
     /* Stats */
     .stats-row {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(5, 1fr);
       gap: 1rem;
       padding: 1.5rem 5%;
-      background: var(--color-white);
-      border-bottom: 1px solid var(--color-sand);
+      background: var(--color-offwhite);
+      border-bottom: 1px solid var(--color-light);
     }
 
     .stat-card {
-      background: var(--color-cream);
+      background: var(--color-white);
       border-radius: var(--radius-md);
       padding: 1rem 1.25rem;
+      border: 1px solid var(--color-light);
     }
 
     .stat-card__label {
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       text-transform: uppercase;
       letter-spacing: 0.1em;
-      color: var(--color-muted);
+      color: var(--color-mid);
       margin-bottom: 0.4rem;
     }
 
@@ -215,218 +230,268 @@
       font-family: var(--font-display);
       font-size: 1.8rem;
       font-weight: 600;
-      color: var(--color-charcoal);
+      color: var(--color-black);
     }
 
-    /* Filter tabs */
-    .table-section {
-      padding: 2rem 5%;
-    }
+    .stat-card__value.green { color: #16a34a; }
+    .stat-card__value.amber { color: #d97706; }
+    .stat-card__value.red   { color: #dc2626; }
 
-    .table-controls {
+    /* Table controls */
+    .table-section { padding: 1.5rem 5%; }
+
+    .table-toolbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 1.25rem;
+      margin-bottom: 1rem;
       flex-wrap: wrap;
       gap: 1rem;
     }
 
-    .table-controls h2 {
-      font-family: var(--font-display);
-      font-size: 1.4rem;
-      font-weight: 600;
-      color: var(--color-charcoal);
+    .table-toolbar__left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
     }
 
-    .filter-tabs {
-      display: flex;
-      gap: 0.5rem;
+    .table-toolbar h2 {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--color-black);
     }
+
+    .filter-tabs { display: flex; gap: 0.4rem; }
 
     .filter-tab {
-      padding: 0.4rem 1rem;
-      border: 1.5px solid var(--color-sand);
+      padding: 0.35rem 0.9rem;
+      border: 1px solid var(--color-light);
       border-radius: 99px;
       background: transparent;
       font-family: var(--font-body);
-      font-size: 0.78rem;
-      color: var(--color-bark);
+      font-size: 0.76rem;
+      color: var(--color-charcoal);
       cursor: pointer;
       transition: all 0.2s;
     }
 
-    .filter-tab:hover {
-      border-color: var(--color-gold);
-      color: var(--color-gold-dark);
+    .filter-tab:hover { border-color: var(--color-charcoal); }
+    .filter-tab.active { background: var(--color-charcoal); border-color: var(--color-charcoal); color: white; }
+
+    /* Search box */
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
-    .filter-tab.active {
-      background: var(--color-gold);
-      border-color: var(--color-gold);
-      color: white;
+    .search-box input {
+      padding: 0.45rem 0.85rem;
+      border: 1px solid var(--color-light);
+      border-radius: var(--radius-md);
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      color: var(--color-charcoal);
+      background: var(--color-white);
+      width: 200px;
+      transition: border-color 0.2s;
+    }
+
+    .search-box input:focus {
+      outline: none;
+      border-color: var(--color-charcoal);
+    }
+
+    /* Sort controls */
+    .sort-select {
+      padding: 0.45rem 0.85rem;
+      border: 1px solid var(--color-light);
+      border-radius: var(--radius-md);
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      color: var(--color-charcoal);
+      background: var(--color-white);
+      cursor: pointer;
     }
 
     /* Table */
+    .table-wrapper { overflow-x: auto; }
+
     .bookings-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.88rem;
+      font-size: 0.86rem;
     }
 
     .bookings-table th {
       text-align: left;
-      padding: 0.75rem 1rem;
-      font-size: 0.72rem;
+      padding: 0.65rem 1rem;
+      font-size: 0.7rem;
       text-transform: uppercase;
       letter-spacing: 0.1em;
-      color: var(--color-muted);
-      border-bottom: 1px solid var(--color-sand);
-      background: var(--color-cream);
+      color: var(--color-mid);
+      border-bottom: 1px solid var(--color-light);
+      background: var(--color-offwhite);
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
     }
 
+    .bookings-table th:hover { color: var(--color-charcoal); }
+    .bookings-table th .sort-arrow { margin-left: 4px; opacity: 0.4; }
+    .bookings-table th.sorted .sort-arrow { opacity: 1; }
+
     .bookings-table td {
-      padding: 1rem;
-      border-bottom: 1px solid var(--color-sand);
-      color: var(--color-bark);
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--color-light);
+      color: var(--color-charcoal);
       vertical-align: middle;
     }
 
-    .bookings-table tr:hover td {
-      background: var(--color-cream);
-    }
+    .bookings-table tr:hover td { background: var(--color-offwhite); }
+
+    .client-name { font-weight: 500; color: var(--color-black); }
+    .client-meta { font-size: 0.78rem; color: var(--color-mid); margin-top: 2px; }
 
     /* Status badges */
     .status-badge {
       display: inline-block;
-      padding: 0.25rem 0.75rem;
+      padding: 0.22rem 0.65rem;
       border-radius: 99px;
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       font-weight: 500;
       text-transform: uppercase;
       letter-spacing: 0.06em;
     }
 
-    .status-badge--pending {
-      background: #FFF8E1;
-      color: #F57F17;
-    }
-
-    .status-badge--confirmed {
-      background: #E8F5E9;
-      color: #2E7D32;
-    }
-
-    .status-badge--cancelled {
-      background: #FDECEA;
-      color: #C62828;
-    }
+    .status-badge--pending   { background: #FEF9C3; color: #854D0E; }
+    .status-badge--confirmed { background: #DCFCE7; color: #166534; }
+    .status-badge--cancelled { background: #FEE2E2; color: #991B1B; }
 
     /* Action buttons */
-    .action-btns {
-      display: flex;
-      gap: 0.4rem;
-    }
+    .action-btns { display: flex; gap: 0.35rem; flex-wrap: wrap; }
 
     .action-btn {
-      padding: 0.3rem 0.65rem;
+      padding: 0.28rem 0.6rem;
       border-radius: var(--radius-sm);
-      font-size: 0.75rem;
+      font-size: 0.74rem;
       cursor: pointer;
       transition: all 0.2s;
       border: 1px solid;
+      white-space: nowrap;
     }
 
-    .action-btn--confirm {
-      border-color: #86efac;
-      background: #f0fdf4;
-      color: #16a34a;
+    .action-btn--confirm { border-color: #86efac; background: #f0fdf4; color: #16a34a; }
+    .action-btn--confirm:hover { background: #16a34a; color: white; }
+
+    .action-btn--cancel { border-color: #fca5a5; background: #fef2f2; color: #dc2626; }
+    .action-btn--cancel:hover { background: #dc2626; color: white; }
+
+    .action-btn--delete { border-color: var(--color-light); background: transparent; color: var(--color-mid); }
+    .action-btn--delete:hover { background: var(--color-black); color: white; border-color: var(--color-black); }
+
+    .action-btn--notes { border-color: #bfdbfe; background: #eff6ff; color: #1d4ed8; }
+    .action-btn--notes:hover { background: #1d4ed8; color: white; }
+
+    /* Notes modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
     }
 
-    .action-btn--confirm:hover {
-      background: #16a34a;
-      color: white;
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: var(--color-white);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
     }
 
-    .action-btn--cancel {
-      border-color: #fca5a5;
-      background: #fef2f2;
-      color: #dc2626;
+    .modal h3 {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--color-black);
+      margin-bottom: 1rem;
     }
 
-    .action-btn--cancel:hover {
-      background: #dc2626;
-      color: white;
-    }
+    .modal p { font-size: 0.9rem; color: var(--color-charcoal); line-height: 1.7; margin-bottom: 1.25rem; }
 
-    .action-btn--delete {
-      border-color: var(--color-sand);
-      background: transparent;
-      color: var(--color-muted);
-    }
-
-    .action-btn--delete:hover {
+    .modal-close {
+      padding: 0.6rem 1.5rem;
       background: var(--color-charcoal);
       color: white;
-      border-color: var(--color-charcoal);
+      border: none;
+      border-radius: var(--radius-md);
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      cursor: pointer;
     }
 
     .state-message {
       text-align: center;
       padding: 3rem;
-      color: var(--color-muted);
+      color: var(--color-mid);
       font-size: 0.95rem;
     }
 
-    .state-message span {
-      display: block;
-      font-size: 2.5rem;
-      margin-bottom: 0.75rem;
+    .state-message span { display: block; font-size: 2.5rem; margin-bottom: 0.75rem; }
+
+    /* Auto-refresh indicator */
+    .refresh-indicator {
+      font-size: 0.75rem;
+      color: var(--color-mid);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .refresh-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #16a34a;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
     }
 
     @media (max-width: 768px) {
-      .stats-row {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .bookings-table {
-        display: block;
-        overflow-x: auto;
-      }
-
-      .filter-tabs {
-        flex-wrap: wrap;
-      }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .table-toolbar { flex-direction: column; align-items: flex-start; }
+      .search-box input { width: 140px; }
+      .admin-header { flex-direction: column; align-items: flex-start; }
     }
   </style>
 </head>
-
 <body>
 
-  <!-- ════════════════════════════════
-       LOGIN SCREEN
-       Shown first — hidden after correct password
-  ════════════════════════════════ -->
+  <!-- LOGIN SCREEN -->
   <div class="login-screen" id="loginScreen">
     <div class="login-card">
       <p class="login-card__logo">Safari <span>Beauty</span></p>
       <p class="login-card__sub">Admin Access</p>
-
       <input type="password" id="passwordInput" placeholder="Enter admin password" autocomplete="current-password" />
-
       <button class="login-btn" onclick="attemptLogin()">Enter Dashboard</button>
-
-      <p class="login-error" id="loginError">
-        ❌ Incorrect password. Please try again.
-      </p>
+      <p class="login-error" id="loginError">❌ Incorrect password. Please try again.</p>
     </div>
   </div>
 
-
-  <!-- ════════════════════════════════
-       DASHBOARD
-       Hidden until login succeeds
-  ════════════════════════════════ -->
+  <!-- DASHBOARD -->
   <div class="dashboard" id="dashboard">
 
     <nav class="admin-nav">
@@ -438,8 +503,18 @@
     </nav>
 
     <div class="admin-header">
-      <h1>Appointments</h1>
-      <p id="lastUpdated">Loading...</p>
+      <div class="admin-header__left">
+        <h1>Appointments</h1>
+        <p id="lastUpdated">Loading...</p>
+      </div>
+      <div class="admin-header__actions">
+        <div class="refresh-indicator">
+          <div class="refresh-dot"></div>
+          <span id="autoRefreshLabel">Auto-refresh: on</span>
+        </div>
+        <button class="admin-btn admin-btn--outline" onclick="toggleAutoRefresh()">Pause Refresh</button>
+        <button class="admin-btn admin-btn--primary" onclick="loadBookings()">↻ Refresh Now</button>
+      </div>
     </div>
 
     <!-- Stats -->
@@ -450,11 +525,15 @@
       </div>
       <div class="stat-card">
         <p class="stat-card__label">Pending</p>
-        <p class="stat-card__value" id="statPending">—</p>
+        <p class="stat-card__value amber" id="statPending">—</p>
       </div>
       <div class="stat-card">
         <p class="stat-card__label">Confirmed</p>
-        <p class="stat-card__value" id="statConfirmed">—</p>
+        <p class="stat-card__value green" id="statConfirmed">—</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-card__label">Cancelled</p>
+        <p class="stat-card__value red" id="statCancelled">—</p>
       </div>
       <div class="stat-card">
         <p class="stat-card__label">Today</p>
@@ -464,161 +543,224 @@
 
     <!-- Table -->
     <div class="table-section">
-      <div class="table-controls">
-        <h2>All Bookings</h2>
-        <div class="filter-tabs">
-          <button class="filter-tab active" onclick="filterBookings('all', this)">All</button>
-          <button class="filter-tab" onclick="filterBookings('pending', this)">Pending</button>
-          <button class="filter-tab" onclick="filterBookings('confirmed', this)">Confirmed</button>
-          <button class="filter-tab" onclick="filterBookings('cancelled', this)">Cancelled</button>
+      <div class="table-toolbar">
+        <div class="table-toolbar__left">
+          <h2>Bookings</h2>
+          <div class="filter-tabs">
+            <button class="filter-tab active" onclick="setFilter('all', this)">All</button>
+            <button class="filter-tab" onclick="setFilter('pending', this)">Pending</button>
+            <button class="filter-tab" onclick="setFilter('confirmed', this)">Confirmed</button>
+            <button class="filter-tab" onclick="setFilter('cancelled', this)">Cancelled</button>
+          </div>
+        </div>
+        <div style="display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap;">
+          <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search client or service..." oninput="applyFilters()" />
+          </div>
+          <select class="sort-select" id="sortSelect" onchange="applyFilters()">
+            <option value="date-asc">Date ↑</option>
+            <option value="date-desc">Date ↓</option>
+            <option value="name-asc">Name A–Z</option>
+            <option value="status">Status</option>
+          </select>
         </div>
       </div>
 
-      <div id="tableContainer">
-        <div class="state-message"><span>⏳</span>Loading bookings...</div>
+      <div class="table-wrapper">
+        <div id="tableContainer">
+          <div class="state-message"><span>⏳</span>Loading bookings...</div>
+        </div>
       </div>
     </div>
 
-  </div><!-- end .dashboard -->
+  </div>
 
+  <!-- Notes Modal -->
+  <div class="modal-overlay" id="notesModal">
+    <div class="modal">
+      <h3>Booking Notes</h3>
+      <p id="modalContent">—</p>
+      <button class="modal-close" onclick="closeModal()">Close</button>
+    </div>
+  </div>
 
   <script>
     const API_URL = 'https://safari-beauty-salon-api.onrender.com/api';
 
-    // Stores all bookings so we can filter without re-fetching
-    let allBookings = [];
-    let currentFilter = 'all';
-
+    let allBookings    = [];
+    let currentFilter  = 'all';
+    let autoRefresh    = true;
+    let refreshTimer   = null;
+    const REFRESH_MS   = 60000; // auto-refresh every 60 seconds
 
     // ── LOGIN ──────────────────────────────────────────────────────
     async function attemptLogin() {
       const password = document.getElementById('passwordInput').value;
-      const errorEl = document.getElementById('loginError');
+      const errorEl  = document.getElementById('loginError');
 
       try {
-        const response = await fetch(`${API_URL}/admin/login`, {
+        const res    = await fetch(`${API_URL}/admin/login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ password })
         });
-
-        const result = await response.json();
+        const result = await res.json();
 
         if (result.success) {
-          // Store login state for this browser session
-          // sessionStorage clears automatically when the tab closes
           sessionStorage.setItem('adminLoggedIn', 'true');
           showDashboard();
         } else {
           errorEl.style.display = 'block';
           document.getElementById('passwordInput').value = '';
         }
-
-      } catch (err) {
-        errorEl.textContent = '❌ Cannot reach the server. Is the backend running?';
+      } catch {
+        errorEl.textContent = '❌ Cannot reach the server.';
         errorEl.style.display = 'block';
       }
     }
 
-    // Allow pressing Enter to submit the password
-    document.getElementById('passwordInput').addEventListener('keydown', function (e) {
+    document.getElementById('passwordInput').addEventListener('keydown', e => {
       if (e.key === 'Enter') attemptLogin();
     });
 
-
-    // ── SHOW / HIDE SCREENS ────────────────────────────────────────
     function showDashboard() {
       document.getElementById('loginScreen').style.display = 'none';
-      document.getElementById('dashboard').style.display = 'block';
+      document.getElementById('dashboard').style.display   = 'block';
       loadBookings();
+      startAutoRefresh();
     }
 
     function logout() {
       sessionStorage.removeItem('adminLoggedIn');
+      stopAutoRefresh();
       document.getElementById('loginScreen').style.display = 'flex';
-      document.getElementById('dashboard').style.display = 'none';
-      document.getElementById('passwordInput').value = '';
-      document.getElementById('loginError').style.display = 'none';
+      document.getElementById('dashboard').style.display   = 'none';
+      document.getElementById('passwordInput').value       = '';
+      document.getElementById('loginError').style.display  = 'none';
     }
 
-    // If already logged in this session, skip the login screen
-    if (sessionStorage.getItem('adminLoggedIn') === 'true') {
-      showDashboard();
+    if (sessionStorage.getItem('adminLoggedIn') === 'true') showDashboard();
+
+    // ── AUTO REFRESH ───────────────────────────────────────────────
+    function startAutoRefresh() {
+      refreshTimer = setInterval(loadBookings, REFRESH_MS);
     }
 
+    function stopAutoRefresh() {
+      clearInterval(refreshTimer);
+    }
+
+    function toggleAutoRefresh() {
+      autoRefresh = !autoRefresh;
+      const btn   = document.querySelector('.admin-btn--outline');
+      const label = document.getElementById('autoRefreshLabel');
+      const dot   = document.querySelector('.refresh-dot');
+
+      if (autoRefresh) {
+        startAutoRefresh();
+        btn.textContent       = 'Pause Refresh';
+        label.textContent     = 'Auto-refresh: on';
+        dot.style.background  = '#16a34a';
+      } else {
+        stopAutoRefresh();
+        btn.textContent       = 'Resume Refresh';
+        label.textContent     = 'Auto-refresh: off';
+        dot.style.background  = '#9ca3af';
+      }
+    }
 
     // ── LOAD BOOKINGS ──────────────────────────────────────────────
     async function loadBookings() {
       try {
-        const response = await fetch(`${API_URL}/bookings`);
-        const data = await response.json();
+        const res  = await fetch(`${API_URL}/bookings`);
+        const data = await res.json();
 
         if (!data.success) throw new Error(data.error);
 
         allBookings = data.bookings;
-        renderTable(allBookings, currentFilter);
+        applyFilters();
         updateStats(allBookings);
 
         const now = new Date().toLocaleTimeString();
         document.getElementById('lastUpdated').textContent = `Last updated: ${now}`;
 
-      } catch (err) {
+      } catch {
         document.getElementById('tableContainer').innerHTML = `
           <div class="state-message">
             <span>❌</span>
-            Could not connect to backend.<br>
-            Make sure your server is running:<br>
-            <code style="color:var(--color-gold-dark);font-size:0.82rem;">python backend/app.py</code>
+            Could not connect to backend. The server may be waking up — try refreshing in 30 seconds.
           </div>
         `;
       }
     }
 
-
-    // ── FILTER BOOKINGS ────────────────────────────────────────────
-    function filterBookings(status, btn) {
+    // ── FILTER + SEARCH + SORT ─────────────────────────────────────
+    function setFilter(status, btn) {
       currentFilter = status;
       document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
       btn.classList.add('active');
-      renderTable(allBookings, status);
+      applyFilters();
     }
 
+    function applyFilters() {
+      const search  = document.getElementById('searchInput').value.toLowerCase();
+      const sort    = document.getElementById('sortSelect').value;
+
+      let filtered = currentFilter === 'all'
+        ? [...allBookings]
+        : allBookings.filter(b => (b.status || 'pending') === currentFilter);
+
+      // Search filter
+      if (search) {
+        filtered = filtered.filter(b =>
+          `${b.first_name} ${b.last_name}`.toLowerCase().includes(search) ||
+          (b.service || '').toLowerCase().includes(search) ||
+          (b.email   || '').toLowerCase().includes(search)
+        );
+      }
+
+      // Sort
+      filtered.sort((a, b) => {
+        if (sort === 'date-asc')  return a.date.localeCompare(b.date) || a.time.localeCompare(b.time);
+        if (sort === 'date-desc') return b.date.localeCompare(a.date) || b.time.localeCompare(a.time);
+        if (sort === 'name-asc')  return `${a.first_name} ${a.last_name}`.localeCompare(`${b.first_name} ${b.last_name}`);
+        if (sort === 'status')    return (a.status || 'pending').localeCompare(b.status || 'pending');
+        return 0;
+      });
+
+      renderTable(filtered);
+    }
 
     // ── RENDER TABLE ───────────────────────────────────────────────
-    function renderTable(bookings, filter) {
+    function renderTable(bookings) {
       const container = document.getElementById('tableContainer');
 
-      // Apply filter
-      const filtered = filter === 'all'
-        ? bookings
-        : bookings.filter(b => (b.status || 'pending') === filter);
-
-      if (filtered.length === 0) {
+      if (bookings.length === 0) {
         container.innerHTML = `
           <div class="state-message">
             <span>📭</span>
-            No ${filter === 'all' ? '' : filter} bookings yet.
+            No bookings found.
           </div>
         `;
         return;
       }
 
-      const rows = filtered.map(b => {
+      const rows = bookings.map(b => {
         const status = b.status || 'pending';
+        const hasNotes = b.notes && b.notes.trim();
         return `
           <tr id="row-${b.id}">
             <td>
-              <strong>${b.first_name} ${b.last_name}</strong><br>
-              <span style="font-size:0.8rem;color:var(--color-muted);">${b.email}</span><br>
-              <span style="font-size:0.8rem;color:var(--color-muted);">${b.phone || ''}</span>
+              <div class="client-name">${b.first_name} ${b.last_name}</div>
+              <div class="client-meta">${b.email}</div>
+              <div class="client-meta">${b.phone || ''}</div>
             </td>
             <td>${b.service}</td>
             <td>${b.date}</td>
             <td>${b.time}</td>
             <td>${b.stylist || 'Any'}</td>
-            <td style="font-size:0.82rem;color:var(--color-muted);max-width:180px;">${b.notes || '—'}</td>
             <td>
-              <span class="status-badge status-badge--${status}" id="badge-${b.id}">
+              <span class="status-badge status-badge--${status}">
                 ${status}
               </span>
             </td>
@@ -626,16 +768,16 @@
               <div class="action-btns">
                 <button class="action-btn action-btn--confirm"
                   onclick="updateStatus(${b.id}, 'confirmed')"
-                  ${status === 'confirmed' ? 'disabled style="opacity:0.4"' : ''}>
+                  ${status === 'confirmed' ? 'disabled style="opacity:0.4;cursor:not-allowed"' : ''}>
                   ✓ Confirm
                 </button>
                 <button class="action-btn action-btn--cancel"
                   onclick="updateStatus(${b.id}, 'cancelled')"
-                  ${status === 'cancelled' ? 'disabled style="opacity:0.4"' : ''}>
+                  ${status === 'cancelled' ? 'disabled style="opacity:0.4;cursor:not-allowed"' : ''}>
                   ✕ Cancel
                 </button>
-                <button class="action-btn action-btn--delete"
-                  onclick="deleteBooking(${b.id})">
+                ${hasNotes ? `<button class="action-btn action-btn--notes" onclick="showNotes('${b.id}', \`${(b.notes||'').replace(/`/g,"'")}\`)">📝 Notes</button>` : ''}
+                <button class="action-btn action-btn--delete" onclick="deleteBooking(${b.id})">
                   Delete
                 </button>
               </div>
@@ -650,89 +792,94 @@
             <tr>
               <th>Client</th>
               <th>Service</th>
-              <th>Date</th>
+              <th onclick="sortBy('date')">Date <span class="sort-arrow">↕</span></th>
               <th>Time</th>
               <th>Stylist</th>
-              <th>Notes</th>
-              <th>Status</th>
+              <th onclick="sortBy('status')">Status <span class="sort-arrow">↕</span></th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>${rows}</tbody>
         </table>
+        <p style="font-size:0.78rem;color:var(--color-mid);margin-top:0.75rem;text-align:right;">
+          Showing ${bookings.length} booking${bookings.length !== 1 ? 's' : ''}
+        </p>
       `;
     }
 
+    function sortBy(field) {
+      const sel = document.getElementById('sortSelect');
+      if (field === 'date') sel.value = sel.value === 'date-asc' ? 'date-desc' : 'date-asc';
+      if (field === 'status') sel.value = 'status';
+      applyFilters();
+    }
 
     // ── UPDATE STATUS ──────────────────────────────────────────────
     async function updateStatus(id, newStatus) {
       try {
-        const response = await fetch(`${API_URL}/bookings/${id}`, {
+        const res    = await fetch(`${API_URL}/bookings/${id}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ status: newStatus })
         });
-
-        const result = await response.json();
+        const result = await res.json();
 
         if (result.success) {
-          // Update the booking in our local array
           const booking = allBookings.find(b => b.id === id);
           if (booking) booking.status = newStatus;
-
-          // Re-render with the same filter
-          renderTable(allBookings, currentFilter);
+          applyFilters();
           updateStats(allBookings);
         } else {
           alert('Error: ' + result.error);
         }
-
-      } catch (err) {
+      } catch {
         alert('Network error. Is the backend running?');
       }
     }
 
-
-    // ── DELETE BOOKING ─────────────────────────────────────────────
+    // ── DELETE ─────────────────────────────────────────────────────
     async function deleteBooking(id) {
       if (!confirm('Permanently delete this booking?')) return;
 
       try {
-        const response = await fetch(`${API_URL}/bookings/${id}`, {
-          method: 'DELETE'
-        });
-        const result = await response.json();
+        const res    = await fetch(`${API_URL}/bookings/${id}`, { method: 'DELETE' });
+        const result = await res.json();
 
         if (result.success) {
-          // Remove from local array and re-render
           allBookings = allBookings.filter(b => b.id !== id);
-          renderTable(allBookings, currentFilter);
+          applyFilters();
           updateStats(allBookings);
         } else {
           alert('Error: ' + result.error);
         }
-
-      } catch (err) {
+      } catch {
         alert('Network error. Is the backend running?');
       }
     }
 
-
-    // ── UPDATE STATS ───────────────────────────────────────────────
-    function updateStats(bookings) {
-      const today = new Date().toISOString().split('T')[0];
-
-      document.getElementById('statTotal').textContent =
-        bookings.length;
-      document.getElementById('statPending').textContent =
-        bookings.filter(b => (b.status || 'pending') === 'pending').length;
-      document.getElementById('statConfirmed').textContent =
-        bookings.filter(b => b.status === 'confirmed').length;
-      document.getElementById('statToday').textContent =
-        bookings.filter(b => b.date === today).length;
+    // ── NOTES MODAL ────────────────────────────────────────────────
+    function showNotes(id, notes) {
+      document.getElementById('modalContent').textContent = notes || 'No notes for this booking.';
+      document.getElementById('notesModal').classList.add('open');
     }
 
+    function closeModal() {
+      document.getElementById('notesModal').classList.remove('open');
+    }
+
+    document.getElementById('notesModal').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+
+    // ── STATS ──────────────────────────────────────────────────────
+    function updateStats(bookings) {
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('statTotal').textContent     = bookings.length;
+      document.getElementById('statPending').textContent   = bookings.filter(b => (b.status || 'pending') === 'pending').length;
+      document.getElementById('statConfirmed').textContent = bookings.filter(b => b.status === 'confirmed').length;
+      document.getElementById('statCancelled').textContent = bookings.filter(b => b.status === 'cancelled').length;
+      document.getElementById('statToday').textContent     = bookings.filter(b => b.date === today).length;
+    }
   </script>
 </body>
-
 </html>

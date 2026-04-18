@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,7 +10,7 @@
     .page-hero {
       padding: 8rem 5% 4rem;
       background: var(--color-white);
-      border-bottom: 1px solid var(--color-sand);
+      border-bottom: 1px solid var(--color-light);
       text-align: center;
     }
 
@@ -19,7 +18,7 @@
       font-size: 0.72rem;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: var(--color-gold);
+      color: var(--color-mid);
       margin-bottom: 0.75rem;
     }
 
@@ -27,18 +26,17 @@
       font-family: var(--font-display);
       font-size: clamp(2rem, 5vw, 3.5rem);
       font-weight: 600;
-      color: var(--color-charcoal);
+      color: var(--color-black);
       margin-bottom: 1rem;
     }
 
     .page-hero__subtitle {
       font-size: 0.95rem;
-      color: var(--color-muted);
+      color: var(--color-mid);
       max-width: 480px;
       margin: 0 auto;
     }
 
-    /* ── BOOKING LAYOUT ── */
     .booking-layout {
       display: grid;
       grid-template-columns: 1.6fr 1fr;
@@ -46,7 +44,6 @@
       align-items: start;
     }
 
-    /* ── BOOKING FORM ── */
     .booking-form {
       background: var(--color-white);
       border-radius: var(--radius-lg);
@@ -58,22 +55,20 @@
       font-family: var(--font-display);
       font-size: 1.6rem;
       font-weight: 600;
-      color: var(--color-charcoal);
+      color: var(--color-black);
       margin-bottom: 0.5rem;
     }
 
     .booking-form__sub {
       font-size: 0.85rem;
-      color: var(--color-muted);
+      color: var(--color-mid);
       margin-bottom: 2rem;
     }
 
-    /* Step indicator */
     .steps {
       display: flex;
-      gap: 0;
       margin-bottom: 2rem;
-      border-bottom: 1px solid var(--color-sand);
+      border-bottom: 1px solid var(--color-light);
     }
 
     .step {
@@ -83,14 +78,14 @@
       font-size: 0.75rem;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--color-muted);
+      color: var(--color-mid);
       border-bottom: 2px solid transparent;
       transition: all 0.25s;
     }
 
     .step.active {
-      color: var(--color-gold);
-      border-bottom-color: var(--color-gold);
+      color: var(--color-charcoal);
+      border-bottom-color: var(--color-charcoal);
     }
 
     .step__num {
@@ -100,17 +95,14 @@
       margin-bottom: 2px;
     }
 
-    /* Form fields */
-    .form-group {
-      margin-bottom: 1.25rem;
-    }
+    .form-group { margin-bottom: 1.25rem; }
 
     .form-group label {
       display: block;
       font-size: 0.78rem;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--color-muted);
+      color: var(--color-mid);
       margin-bottom: 0.4rem;
     }
 
@@ -119,9 +111,9 @@
     .form-group textarea {
       width: 100%;
       padding: 0.75rem 1rem;
-      border: 1.5px solid var(--color-sand);
+      border: 1.5px solid var(--color-light);
       border-radius: var(--radius-md);
-      background: var(--color-cream);
+      background: var(--color-offwhite);
       font-family: var(--font-body);
       font-size: 0.9rem;
       color: var(--color-charcoal);
@@ -133,8 +125,61 @@
     .form-group select:focus,
     .form-group textarea:focus {
       outline: none;
-      border-color: var(--color-gold);
+      border-color: var(--color-charcoal);
       background: var(--color-white);
+    }
+
+    /* Multiple services checklist */
+    .services-checklist {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      margin-top: 0.4rem;
+    }
+
+    .service-check {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 0.75rem;
+      border: 1.5px solid var(--color-light);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.2s;
+      background: var(--color-offwhite);
+    }
+
+    .service-check:hover { border-color: var(--color-charcoal); }
+
+    .service-check input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--color-charcoal);
+      cursor: pointer;
+      flex-shrink: 0;
+      padding: 0;
+      border: none;
+      background: none;
+    }
+
+    .service-check span {
+      font-size: 0.82rem;
+      color: var(--color-charcoal);
+      line-height: 1.3;
+    }
+
+    .service-check.checked {
+      border-color: var(--color-charcoal);
+      background: var(--color-light);
+    }
+
+    .service-group-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--color-mid);
+      margin: 0.75rem 0 0.4rem;
+      grid-column: 1 / -1;
     }
 
     .form-row {
@@ -143,56 +188,46 @@
       gap: 1rem;
     }
 
-    /* Time slots grid */
     .time-slots {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 0.5rem;
       margin-top: 0.4rem;
       min-height: 44px;
-      /* prevents layout jumping when prompt shows */
     }
 
     .time-slot {
       padding: 0.6rem 0.4rem;
       text-align: center;
-      border: 1.5px solid var(--color-sand);
+      border: 1.5px solid var(--color-light);
       border-radius: var(--radius-md);
       font-size: 0.8rem;
-      color: var(--color-bark);
+      color: var(--color-charcoal);
       cursor: pointer;
       transition: all 0.2s;
-      background: var(--color-cream);
+      background: var(--color-offwhite);
     }
 
-    .time-slot:hover {
-      border-color: var(--color-gold);
-      color: var(--color-gold-dark);
-    }
+    .time-slot:hover { border-color: var(--color-charcoal); }
 
     .time-slot.selected {
-      background: var(--color-gold);
-      border-color: var(--color-gold);
+      background: var(--color-charcoal);
+      border-color: var(--color-charcoal);
       color: var(--color-white);
     }
 
     .time-slot.booked {
-      opacity: 0.4;
+      opacity: 0.35;
       cursor: not-allowed;
       text-decoration: line-through;
     }
 
-    .time-slot__label {
-      font-size: 0.65rem;
-      color: inherit;
-      opacity: 0.8;
-    }
+    .time-slot__label { font-size: 0.65rem; color: inherit; opacity: 0.8; }
 
-    /* Submit button */
     .booking-submit {
       width: 100%;
       padding: 1rem;
-      background: var(--color-gold);
+      background: var(--color-charcoal);
       color: var(--color-white);
       border: none;
       border-radius: var(--radius-md);
@@ -207,16 +242,11 @@
     }
 
     .booking-submit:hover {
-      background: var(--color-gold-dark);
+      background: var(--color-black);
       transform: translateY(-1px);
     }
 
-    /* ── SIDEBAR INFO ── */
-    .booking-sidebar {
-      display: flex;
-      flex-direction: column;
-      gap: 1.25rem;
-    }
+    .booking-sidebar { display: flex; flex-direction: column; gap: 1.25rem; }
 
     .info-card {
       background: var(--color-white);
@@ -229,60 +259,44 @@
       font-family: var(--font-display);
       font-size: 1.1rem;
       font-weight: 600;
-      color: var(--color-charcoal);
+      color: var(--color-black);
       margin-bottom: 1rem;
     }
 
     .info-card p {
       font-size: 0.85rem;
-      color: var(--color-muted);
+      color: var(--color-mid);
       margin-bottom: 0.5rem;
       display: flex;
       gap: 0.5rem;
     }
 
-    .hours-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-    }
+    .hours-grid { display: flex; flex-direction: column; gap: 0.4rem; }
 
     .hours-row {
       display: flex;
       justify-content: space-between;
       font-size: 0.84rem;
-      color: var(--color-bark);
+      color: var(--color-charcoal);
     }
 
-    .hours-row span:last-child {
-      color: var(--color-muted);
-    }
+    .hours-row span:last-child { color: var(--color-mid); }
 
     @media (max-width: 768px) {
-      .booking-layout {
-        grid-template-columns: 1fr;
-      }
-
-      .form-row {
-        grid-template-columns: 1fr;
-      }
-
-      .time-slots {
-        grid-template-columns: repeat(3, 1fr);
-      }
+      .booking-layout     { grid-template-columns: 1fr; }
+      .form-row           { grid-template-columns: 1fr; }
+      .time-slots         { grid-template-columns: repeat(3, 1fr); }
+      .services-checklist { grid-template-columns: 1fr; }
     }
   </style>
 </head>
-
 <body>
 
   <header>
     <nav class="nav">
       <a href="index.html" class="nav__logo">Safari <span>Beauty Salon</span></a>
       <button class="nav__toggle" id="navToggle" aria-label="Open menu">
-        <span></span>
-        <span></span>
-        <span></span>
+        <span></span><span></span><span></span>
       </button>
       <ul class="nav__links" id="navLinks">
         <li><a href="index.html">Home</a></li>
@@ -299,78 +313,107 @@
     <div class="page-hero">
       <p class="page-hero__eyebrow">Appointments</p>
       <h1 class="page-hero__title">Book Your Visit</h1>
-      <p class="page-hero__subtitle">
-        Choose your service, pick a time, and we'll take care of the rest.
-      </p>
+      <p class="page-hero__subtitle">Choose your services, pick a time, and we'll take care of the rest.</p>
     </div>
 
     <section class="section section--alt">
       <div class="booking-layout">
 
-        <!-- BOOKING FORM -->
         <div class="booking-form">
           <h2>Reserve Your Appointment</h2>
-          <p class="booking-form__sub">
-            Fill out the form below and we'll confirm within 1 hour.
-          </p>
+          <p class="booking-form__sub">Fill out the form below and we'll confirm within 1 hour.</p>
 
-          <!-- Progress steps -->
           <div class="steps">
-            <div class="step active">
-              <span class="step__num">1</span>
-              Service
-            </div>
-            <div class="step">
-              <span class="step__num">2</span>
-              Date & Time
-            </div>
-            <div class="step">
-              <span class="step__num">3</span>
-              Your Info
-            </div>
+            <div class="step active"><span class="step__num">1</span>Services</div>
+            <div class="step"><span class="step__num">2</span>Date & Time</div>
+            <div class="step"><span class="step__num">3</span>Your Info</div>
           </div>
 
           <form id="bookingForm">
 
-            <!-- Service selection -->
+            <!-- SERVICES — multiple selection via checkboxes -->
             <div class="form-group">
-              <label for="service">Service</label>
-              <select id="service" name="service" required>
-                <option value="" disabled selected>Select a service...</option>
-                <optgroup label="Haircuts">
-                  <option value="womens-cut">Women's Haircut — $45+</option>
-                  <option value="mens-cut">Men's Haircut — $30+</option>
-                  <option value="kids-cut">Kids' Haircut — $20+</option>
-                </optgroup>
-                <optgroup label="Extensions">
-                  <option value="tape-in">Tape-In Extensions — $200+</option>
-                  <option value="sew-in">Sew-In Extensions — $250+</option>
-                  <option value="removal">Extension Removal — $75+</option>
-                </optgroup>
-                <optgroup label="Color">
-                  <option value="full-color">Full Color — $85+</option>
-                  <option value="highlights">Highlights — $100+</option>
-                  <option value="balayage">Balayage — $130+</option>
-                  <option value="root-touchup">Root Touch-Up — $60+</option>
-                </optgroup>
-                <optgroup label="Treatments">
-                  <option value="keratin">Keratin Treatment — $150+</option>
-                  <option value="deep-conditioning">Deep Conditioning — $35+</option>
-                </optgroup>
-              </select>
+              <label>Services (select all that apply)</label>
+              <div class="services-checklist" id="servicesChecklist">
+
+                <p class="service-group-label">Haircuts</p>
+                <label class="service-check">
+                  <input type="checkbox" name="services" value="Women's Haircut" />
+                  <span>Women's Haircut — $45+</span>
+                </label>
+                <label class="service-check">
+                  <input type="checkbox" name="services" value="Men's Haircut" />
+                  <span>Men's Haircut — $30+</span>
+                </label>
+                <label class="service-check">
+                  <input type="checkbox" name="services" value="Kids' Haircut" />
+                  <span>Kids' Haircut — $20+</span>
+                </label>
+                <label class="service-check">
+                  <input type="checkbox" name="services" value="Bang Trim" />
+                  <span>Bang Trim — $10</span>
+                </label>
+
+                <p class="service-group-label">Extensions</p>
+                <label class="service-check">
+                  <input type="checkbox" name="services" value="Tape-In Extensions" />
+                  <span>Tape-In — $200+</span>
+                </label>
+                <label class="service-check">
+                  <input type="checkbox" name="services" value="Sew-In Extensions" />
+                  <span>Sew-In — $250+</span>
+                </label>
+                <label class="service-check">
+                  <input type="checkbox" name="services" value="Extension Removal" />
+                  <span>Removal — $75+</span>
+                </label>
+
+                <p class="service-group-label">Color</p>
+                <label class="service-check">
+                  <input type="checkbox" name="services" value="Full Color" />
+                  <span>Full Color — $85+</span>
+                </label>
+                <label class="service-check">
+                  <input type="checkbox" name="services" value="Highlights" />
+                  <span>Highlights — $100+</span>
+                </label>
+                <label class="service-check">
+                  <input type="checkbox" name="services" value="Balayage" />
+                  <span>Balayage — $130+</span>
+                </label>
+                <label class="service-check">
+                  <input type="checkbox" name="services" value="Root Touch-Up" />
+                  <span>Root Touch-Up — $60+</span>
+                </label>
+
+                <p class="service-group-label">Treatments</p>
+                <label class="service-check">
+                  <input type="checkbox" name="services" value="Keratin Treatment" />
+                  <span>Keratin — $150+</span>
+                </label>
+                <label class="service-check">
+                  <input type="checkbox" name="services" value="Deep Conditioning" />
+                  <span>Deep Conditioning — $35+</span>
+                </label>
+                <label class="service-check">
+                  <input type="checkbox" name="services" value="Scalp Treatment" />
+                  <span>Scalp Treatment — $40+</span>
+                </label>
+
+              </div>
             </div>
 
-            <!-- Stylist selection -->
+            <!-- STYLIST -->
             <div class="form-group">
               <label for="stylist">Preferred Stylist</label>
               <select id="stylist" name="stylist">
                 <option value="any">Any available stylist</option>
-                <option value="stylist1">Jennifer</option>
-                <option value="stylist2">Julieth</option>
+                <option value="Jennifer">Jennifer</option>
+                <option value="Julieth">Julieth</option>
               </select>
             </div>
 
-            <!-- Date -->
+            <!-- DATE -->
             <div class="form-row">
               <div class="form-group">
                 <label for="date">Date</label>
@@ -378,74 +421,89 @@
               </div>
             </div>
 
-            <!-- Time Slots -->
-            <!-- The time slots are empty on load.
-                 booking.js fills this in after the user picks a date. -->
+            <!-- TIME SLOTS — controlled entirely by booking.js -->
             <div class="form-group">
               <label>Available Times</label>
-              <div class="time-slots" id="timeSlotsContainer">
-                <!-- booking.js shows a prompt here on page load -->
-              </div>
+              <div class="time-slots" id="timeSlotsContainer"></div>
               <input type="hidden" id="selectedTime" name="time" />
             </div>
 
-            <!-- Personal Info -->
+            <!-- PERSONAL INFO — no placeholder text, strict input types -->
             <div class="form-row">
               <div class="form-group">
                 <label for="firstName">First Name</label>
-                <input type="text" id="firstName" name="first_name" placeholder="Maria" required />
+                <input
+                  type="text"
+                  id="firstName"
+                  name="first_name"
+                  autocomplete="given-name"
+                  pattern="[A-Za-zÀ-ÿ\s\-']+"
+                  title="Letters only please"
+                  required
+                />
               </div>
               <div class="form-group">
                 <label for="lastName">Last Name</label>
-                <input type="text" id="lastName" name="last_name" placeholder="Lopez" required />
+                <input
+                  type="text"
+                  id="lastName"
+                  name="last_name"
+                  autocomplete="family-name"
+                  pattern="[A-Za-zÀ-ÿ\s\-']+"
+                  title="Letters only please"
+                  required
+                />
               </div>
             </div>
 
             <div class="form-group">
               <label for="email">Email Address</label>
-              <input type="email" id="email" name="email" placeholder="maria@email.com" required />
+              <input
+                type="email"
+                id="email"
+                name="email"
+                autocomplete="email"
+                required
+              />
             </div>
 
             <div class="form-group">
               <label for="phone">Phone Number</label>
-              <input type="tel" id="phone" name="phone" placeholder="(323) 555-0000" />
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                autocomplete="tel"
+                pattern="[0-9\s\(\)\-\+]+"
+                title="Numbers only please"
+                inputmode="numeric"
+              />
             </div>
 
             <div class="form-group">
               <label for="notes">Special Requests (optional)</label>
-              <textarea id="notes" name="notes" rows="3" placeholder="Any notes for your stylist..."></textarea>
+              <textarea id="notes" name="notes" rows="3"></textarea>
             </div>
 
-            <button type="submit" class="booking-submit">
-              Confirm Appointment
-            </button>
+            <button type="submit" class="booking-submit">Confirm Appointment</button>
 
           </form>
         </div>
 
-        <!-- SIDEBAR INFO -->
+        <!-- SIDEBAR -->
         <div class="booking-sidebar">
           <div class="info-card">
             <p class="info-card__title">📍 Location</p>
             <p>📌 South Gate, CA</p>
             <p>📞 (323) 555-0198</p>
-            <p>📧 hello@safarbeauty.com</p>
+            <p>📧 hello@safaribeautysalon.com</p>
           </div>
           <div class="info-card">
             <p class="info-card__title">🕐 Hours</p>
             <div class="hours-grid">
-              <div class="hours-row">
-                <span>Monday – Friday</span>
-                <span>9am – 7pm</span>
-              </div>
-              <div class="hours-row">
-                <span>Saturday</span>
-                <span>9am – 6pm</span>
-              </div>
-              <div class="hours-row">
-                <span>Sunday</span>
-                <span>10am – 5pm</span>
-              </div>
+              <div class="hours-row"><span>Monday – Friday</span><span>9am – 7pm</span></div>
+              <div class="hours-row"><span>Saturday</span><span>9am – 6pm</span></div>
+              <div class="hours-row"><span>Sunday</span><span>10am – 5pm</span></div>
             </div>
           </div>
           <div class="info-card">
@@ -465,9 +523,7 @@
     <div class="footer__grid">
       <div>
         <p class="footer__logo">Safari <span>Beauty Salon</span></p>
-        <p class="footer__tagline">
-          Modern hair styling and extensions in the heart of South Gate, California.
-        </p>
+        <p class="footer__tagline">Modern hair styling and extensions in South Gate, California.</p>
       </div>
       <div>
         <p class="footer__heading">Pages</p>
@@ -490,14 +546,16 @@
     <p class="footer__bottom">© 2025 Safari Beauty Salon. All rights reserved.</p>
   </footer>
 
-  <!--
-    main.js  — handles nav, animations, active link highlighting
-    booking.js — handles date change, time slot loading, form submission
-    booking.js must load AFTER main.js
-  -->
   <script src="js/main.js"></script>
   <script src="js/booking.js"></script>
+  <script>
+    // Visually highlight checked service cards
+    document.querySelectorAll('.service-check input[type="checkbox"]').forEach(cb => {
+      cb.addEventListener('change', function () {
+        this.closest('.service-check').classList.toggle('checked', this.checked);
+      });
+    });
+  </script>
 
 </body>
-
 </html>

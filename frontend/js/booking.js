@@ -20,7 +20,7 @@
 
 // The base URL of our Python backend server
 // During development this is localhost. In production it'll be your real domain.
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'https://safari-beauty-salon-api.onrender.com/api';
 
 // ── LOAD AVAILABILITY WHEN DATE CHANGES ───────────────────────────
 // When the user picks a date, we fetch which slots are already booked.
@@ -140,14 +140,14 @@ if (bookingForm) {
     // Build a plain JavaScript object with all the form values
     const bookingData = {
       first_name: document.getElementById('firstName').value.trim(),
-      last_name:  document.getElementById('lastName').value.trim(),
-      email:      document.getElementById('email').value.trim(),
-      phone:      document.getElementById('phone').value.trim(),
-      service:    document.getElementById('service').value,
-      stylist:    document.getElementById('stylist').value,
-      date:       document.getElementById('date').value,
-      time:       document.getElementById('selectedTime').value,
-      notes:      document.getElementById('notes').value.trim(),
+      last_name: document.getElementById('lastName').value.trim(),
+      email: document.getElementById('email').value.trim(),
+      phone: document.getElementById('phone').value.trim(),
+      service: document.getElementById('service').value,
+      stylist: document.getElementById('stylist').value,
+      date: document.getElementById('date').value,
+      time: document.getElementById('selectedTime').value,
+      notes: document.getElementById('notes').value.trim(),
     };
 
     // ── CLIENT-SIDE VALIDATION ─────────────────────────────────

@@ -17,13 +17,16 @@
   This is simple protection — enough for a portfolio project and small business.
 -->
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Dashboard | Safari Beauty Salon</title>
   <link rel="stylesheet" href="css/style.css" />
   <style>
-    body { background: var(--color-cream); }
+    body {
+      background: var(--color-cream);
+    }
 
     /* ── LOGIN SCREEN ── */
     .login-screen {
@@ -52,7 +55,9 @@
       margin-bottom: 0.25rem;
     }
 
-    .login-card__logo span { color: var(--color-gold); }
+    .login-card__logo span {
+      color: var(--color-gold);
+    }
 
     .login-card__sub {
       font-size: 0.78rem;
@@ -99,7 +104,9 @@
       transition: background 0.25s;
     }
 
-    .login-btn:hover { background: var(--color-gold-dark); }
+    .login-btn:hover {
+      background: var(--color-gold-dark);
+    }
 
     .login-error {
       margin-top: 1rem;
@@ -109,7 +116,9 @@
     }
 
     /* ── DASHBOARD (hidden until logged in) ── */
-    .dashboard { display: none; }
+    .dashboard {
+      display: none;
+    }
 
     .admin-nav {
       background: var(--color-charcoal);
@@ -126,7 +135,9 @@
       color: var(--color-white);
     }
 
-    .admin-nav__logo span { color: var(--color-gold); }
+    .admin-nav__logo span {
+      color: var(--color-gold);
+    }
 
     .admin-nav__right {
       display: flex;
@@ -153,7 +164,9 @@
       transition: color 0.2s;
     }
 
-    .logout-btn:hover { color: var(--color-white); }
+    .logout-btn:hover {
+      color: var(--color-white);
+    }
 
     .admin-header {
       background: var(--color-cream);
@@ -169,7 +182,10 @@
       margin-bottom: 0.25rem;
     }
 
-    .admin-header p { font-size: 0.88rem; color: var(--color-muted); }
+    .admin-header p {
+      font-size: 0.88rem;
+      color: var(--color-muted);
+    }
 
     /* Stats */
     .stats-row {
@@ -203,7 +219,9 @@
     }
 
     /* Filter tabs */
-    .table-section { padding: 2rem 5%; }
+    .table-section {
+      padding: 2rem 5%;
+    }
 
     .table-controls {
       display: flex;
@@ -238,8 +256,16 @@
       transition: all 0.2s;
     }
 
-    .filter-tab:hover { border-color: var(--color-gold); color: var(--color-gold-dark); }
-    .filter-tab.active { background: var(--color-gold); border-color: var(--color-gold); color: white; }
+    .filter-tab:hover {
+      border-color: var(--color-gold);
+      color: var(--color-gold-dark);
+    }
+
+    .filter-tab.active {
+      background: var(--color-gold);
+      border-color: var(--color-gold);
+      color: white;
+    }
 
     /* Table */
     .bookings-table {
@@ -266,7 +292,9 @@
       vertical-align: middle;
     }
 
-    .bookings-table tr:hover td { background: var(--color-cream); }
+    .bookings-table tr:hover td {
+      background: var(--color-cream);
+    }
 
     /* Status badges */
     .status-badge {
@@ -279,12 +307,26 @@
       letter-spacing: 0.06em;
     }
 
-    .status-badge--pending   { background: #FFF8E1; color: #F57F17; }
-    .status-badge--confirmed { background: #E8F5E9; color: #2E7D32; }
-    .status-badge--cancelled { background: #FDECEA; color: #C62828; }
+    .status-badge--pending {
+      background: #FFF8E1;
+      color: #F57F17;
+    }
+
+    .status-badge--confirmed {
+      background: #E8F5E9;
+      color: #2E7D32;
+    }
+
+    .status-badge--cancelled {
+      background: #FDECEA;
+      color: #C62828;
+    }
 
     /* Action buttons */
-    .action-btns { display: flex; gap: 0.4rem; }
+    .action-btns {
+      display: flex;
+      gap: 0.4rem;
+    }
 
     .action-btn {
       padding: 0.3rem 0.65rem;
@@ -301,7 +343,10 @@
       color: #16a34a;
     }
 
-    .action-btn--confirm:hover { background: #16a34a; color: white; }
+    .action-btn--confirm:hover {
+      background: #16a34a;
+      color: white;
+    }
 
     .action-btn--cancel {
       border-color: #fca5a5;
@@ -309,7 +354,10 @@
       color: #dc2626;
     }
 
-    .action-btn--cancel:hover { background: #dc2626; color: white; }
+    .action-btn--cancel:hover {
+      background: #dc2626;
+      color: white;
+    }
 
     .action-btn--delete {
       border-color: var(--color-sand);
@@ -317,7 +365,11 @@
       color: var(--color-muted);
     }
 
-    .action-btn--delete:hover { background: var(--color-charcoal); color: white; border-color: var(--color-charcoal); }
+    .action-btn--delete:hover {
+      background: var(--color-charcoal);
+      color: white;
+      border-color: var(--color-charcoal);
+    }
 
     .state-message {
       text-align: center;
@@ -326,15 +378,29 @@
       font-size: 0.95rem;
     }
 
-    .state-message span { display: block; font-size: 2.5rem; margin-bottom: 0.75rem; }
+    .state-message span {
+      display: block;
+      font-size: 2.5rem;
+      margin-bottom: 0.75rem;
+    }
 
     @media (max-width: 768px) {
-      .stats-row { grid-template-columns: 1fr 1fr; }
-      .bookings-table { display: block; overflow-x: auto; }
-      .filter-tabs { flex-wrap: wrap; }
+      .stats-row {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .bookings-table {
+        display: block;
+        overflow-x: auto;
+      }
+
+      .filter-tabs {
+        flex-wrap: wrap;
+      }
     }
   </style>
 </head>
+
 <body>
 
   <!-- ════════════════════════════════
@@ -346,12 +412,7 @@
       <p class="login-card__logo">Safari <span>Beauty</span></p>
       <p class="login-card__sub">Admin Access</p>
 
-      <input
-        type="password"
-        id="passwordInput"
-        placeholder="Enter admin password"
-        autocomplete="current-password"
-      />
+      <input type="password" id="passwordInput" placeholder="Enter admin password" autocomplete="current-password" />
 
       <button class="login-btn" onclick="attemptLogin()">Enter Dashboard</button>
 
@@ -422,7 +483,7 @@
 
 
   <script>
-    const API_URL = 'http://localhost:5000/api';
+    const API_URL = 'https://safari-beauty-salon-api.onrender.com/api';
 
     // Stores all bookings so we can filter without re-fetching
     let allBookings = [];
@@ -432,7 +493,7 @@
     // ── LOGIN ──────────────────────────────────────────────────────
     async function attemptLogin() {
       const password = document.getElementById('passwordInput').value;
-      const errorEl  = document.getElementById('loginError');
+      const errorEl = document.getElementById('loginError');
 
       try {
         const response = await fetch(`${API_URL}/admin/login`, {
@@ -460,7 +521,7 @@
     }
 
     // Allow pressing Enter to submit the password
-    document.getElementById('passwordInput').addEventListener('keydown', function(e) {
+    document.getElementById('passwordInput').addEventListener('keydown', function (e) {
       if (e.key === 'Enter') attemptLogin();
     });
 
@@ -490,7 +551,7 @@
     async function loadBookings() {
       try {
         const response = await fetch(`${API_URL}/bookings`);
-        const data     = await response.json();
+        const data = await response.json();
 
         if (!data.success) throw new Error(data.error);
 
@@ -671,4 +732,5 @@
 
   </script>
 </body>
+
 </html>

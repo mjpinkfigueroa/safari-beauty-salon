@@ -186,6 +186,9 @@ if (bookingForm) {
         );
         bookingForm.reset();
         document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+        // Reset the button back to normal
+        submitBtn.textContent = 'Confirm Appointment';
+        submitBtn.disabled = false;
       } else {
         showMessage(`❌ Error: ${result.error}`, 'error');
         submitBtn.textContent = 'Confirm Appointment';

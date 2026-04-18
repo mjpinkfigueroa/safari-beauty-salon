@@ -149,7 +149,8 @@
       grid-template-columns: repeat(4, 1fr);
       gap: 0.5rem;
       margin-top: 0.4rem;
-      min-height: 44px;    /* prevents layout jumping when prompt shows */
+      min-height: 44px;
+      /* prevents layout jumping when prompt shows */
     }
 
     .time-slot {
@@ -364,8 +365,8 @@
               <label for="stylist">Preferred Stylist</label>
               <select id="stylist" name="stylist">
                 <option value="any">Any available stylist</option>
-                <option value="stylist1">Stylist 1</option>
-                <option value="stylist2">Stylist 2</option>
+                <option value="stylist1">Jennifer</option>
+                <option value="stylist2">Julieth</option>
               </select>
             </div>
 
@@ -392,55 +393,27 @@
             <div class="form-row">
               <div class="form-group">
                 <label for="firstName">First Name</label>
-                <input
-                  type="text"
-                  id="firstName"
-                  name="first_name"
-                  placeholder="Maria"
-                  required
-                />
+                <input type="text" id="firstName" name="first_name" placeholder="Maria" required />
               </div>
               <div class="form-group">
                 <label for="lastName">Last Name</label>
-                <input
-                  type="text"
-                  id="lastName"
-                  name="last_name"
-                  placeholder="Lopez"
-                  required
-                />
+                <input type="text" id="lastName" name="last_name" placeholder="Lopez" required />
               </div>
             </div>
 
             <div class="form-group">
               <label for="email">Email Address</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                placeholder="maria@email.com"
-                required
-              />
+              <input type="email" id="email" name="email" placeholder="maria@email.com" required />
             </div>
 
             <div class="form-group">
               <label for="phone">Phone Number</label>
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                placeholder="(323) 555-0000"
-              />
+              <input type="tel" id="phone" name="phone" placeholder="(323) 555-0000" />
             </div>
 
             <div class="form-group">
               <label for="notes">Special Requests (optional)</label>
-              <textarea
-                id="notes"
-                name="notes"
-                rows="3"
-                placeholder="Any notes for your stylist..."
-              ></textarea>
+              <textarea id="notes" name="notes" rows="3" placeholder="Any notes for your stylist..."></textarea>
             </div>
 
             <button type="submit" class="booking-submit">
@@ -526,4 +499,5 @@
   <script src="js/booking.js"></script>
 
 </body>
+
 </html>

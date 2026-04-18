@@ -143,12 +143,13 @@
       gap: 1rem;
     }
 
-    /* Time slots */
+    /* Time slots grid */
     .time-slots {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 0.5rem;
       margin-top: 0.4rem;
+      min-height: 44px;    /* prevents layout jumping when prompt shows */
     }
 
     .time-slot {
@@ -276,9 +277,11 @@
 
   <header>
     <nav class="nav">
-      <a href="index.html" class="nav__logo">Safari <span>Beauty</span></a>
+      <a href="index.html" class="nav__logo">Safari <span>Beauty Salon</span></a>
       <button class="nav__toggle" id="navToggle" aria-label="Open menu">
-        <span></span><span></span><span></span>
+        <span></span>
+        <span></span>
+        <span></span>
       </button>
       <ul class="nav__links" id="navLinks">
         <li><a href="index.html">Home</a></li>
@@ -295,7 +298,9 @@
     <div class="page-hero">
       <p class="page-hero__eyebrow">Appointments</p>
       <h1 class="page-hero__title">Book Your Visit</h1>
-      <p class="page-hero__subtitle">Choose your service, pick a time, and we'll take care of the rest.</p>
+      <p class="page-hero__subtitle">
+        Choose your service, pick a time, and we'll take care of the rest.
+      </p>
     </div>
 
     <section class="section section--alt">
@@ -304,9 +309,11 @@
         <!-- BOOKING FORM -->
         <div class="booking-form">
           <h2>Reserve Your Appointment</h2>
-          <p class="booking-form__sub">Fill out the form below and we'll confirm within 1 hour.</p>
+          <p class="booking-form__sub">
+            Fill out the form below and we'll confirm within 1 hour.
+          </p>
 
-          <!-- Progress steps (visual only for now — becomes functional in Sprint 3) -->
+          <!-- Progress steps -->
           <div class="steps">
             <div class="step active">
               <span class="step__num">1</span>
@@ -322,14 +329,9 @@
             </div>
           </div>
 
-          <!--
-            NOTE: This form currently does NOT send data anywhere.
-            In Sprint 3, we will connect this to our Python backend
-            using the fetch() API to POST data to our server.
-          -->
           <form id="bookingForm">
 
-            <!-- Step 1: Service selection -->
+            <!-- Service selection -->
             <div class="form-group">
               <label for="service">Service</label>
               <select id="service" name="service" required>
@@ -357,6 +359,7 @@
               </select>
             </div>
 
+            <!-- Stylist selection -->
             <div class="form-group">
               <label for="stylist">Preferred Stylist</label>
               <select id="stylist" name="stylist">
@@ -375,21 +378,13 @@
             </div>
 
             <!-- Time Slots -->
+            <!-- The time slots are empty on load.
+                 booking.js fills this in after the user picks a date. -->
             <div class="form-group">
               <label>Available Times</label>
-              <div class="time-slots">
-                <div class="time-slot booked">9:00 AM<br><span class="time-slot__label">Booked</span></div>
-                <div class="time-slot" onclick="selectTime(this, '10:00 AM')">10:00 AM</div>
-                <div class="time-slot" onclick="selectTime(this, '11:00 AM')">11:00 AM</div>
-                <div class="time-slot booked">12:00 PM<br><span class="time-slot__label">Booked</span></div>
-                <div class="time-slot" onclick="selectTime(this, '1:00 PM')">1:00 PM</div>
-                <div class="time-slot" onclick="selectTime(this, '2:00 PM')">2:00 PM</div>
-                <div class="time-slot" onclick="selectTime(this, '3:00 PM')">3:00 PM</div>
-                <div class="time-slot booked">4:00 PM<br><span class="time-slot__label">Booked</span></div>
-                <div class="time-slot" onclick="selectTime(this, '5:00 PM')">5:00 PM</div>
-                <div class="time-slot" onclick="selectTime(this, '6:00 PM')">6:00 PM</div>
+              <div class="time-slots" id="timeSlotsContainer">
+                <!-- booking.js shows a prompt here on page load -->
               </div>
-              <!-- Hidden input stores the selected time for form submission -->
               <input type="hidden" id="selectedTime" name="time" />
             </div>
 
@@ -397,30 +392,61 @@
             <div class="form-row">
               <div class="form-group">
                 <label for="firstName">First Name</label>
-                <input type="text" id="firstName" name="first_name" placeholder="Maria" required />
+                <input
+                  type="text"
+                  id="firstName"
+                  name="first_name"
+                  placeholder="Maria"
+                  required
+                />
               </div>
               <div class="form-group">
                 <label for="lastName">Last Name</label>
-                <input type="text" id="lastName" name="last_name" placeholder="Lopez" required />
+                <input
+                  type="text"
+                  id="lastName"
+                  name="last_name"
+                  placeholder="Lopez"
+                  required
+                />
               </div>
             </div>
 
             <div class="form-group">
               <label for="email">Email Address</label>
-              <input type="email" id="email" name="email" placeholder="maria@email.com" required />
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="maria@email.com"
+                required
+              />
             </div>
 
             <div class="form-group">
               <label for="phone">Phone Number</label>
-              <input type="tel" id="phone" name="phone" placeholder="(323) 555-0000" />
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                placeholder="(323) 555-0000"
+              />
             </div>
 
             <div class="form-group">
               <label for="notes">Special Requests (optional)</label>
-              <textarea id="notes" name="notes" rows="3" placeholder="Any notes for your stylist..."></textarea>
+              <textarea
+                id="notes"
+                name="notes"
+                rows="3"
+                placeholder="Any notes for your stylist..."
+              ></textarea>
             </div>
 
-            <button type="submit" class="booking-submit">Confirm Appointment</button>
+            <button type="submit" class="booking-submit">
+              Confirm Appointment
+            </button>
+
           </form>
         </div>
 
@@ -435,9 +461,18 @@
           <div class="info-card">
             <p class="info-card__title">🕐 Hours</p>
             <div class="hours-grid">
-              <div class="hours-row"><span>Monday – Friday</span><span>9am – 7pm</span></div>
-              <div class="hours-row"><span>Saturday</span><span>9am – 6pm</span></div>
-              <div class="hours-row"><span>Sunday</span><span>10am – 5pm</span></div>
+              <div class="hours-row">
+                <span>Monday – Friday</span>
+                <span>9am – 7pm</span>
+              </div>
+              <div class="hours-row">
+                <span>Saturday</span>
+                <span>9am – 6pm</span>
+              </div>
+              <div class="hours-row">
+                <span>Sunday</span>
+                <span>10am – 5pm</span>
+              </div>
             </div>
           </div>
           <div class="info-card">
@@ -456,8 +491,10 @@
   <footer class="footer">
     <div class="footer__grid">
       <div>
-        <p class="footer__logo">Safari <span>Beauty</span></p>
-        <p class="footer__tagline">Modern hair styling and extensions in the heart of South Gate, California.</p>
+        <p class="footer__logo">Safari <span>Beauty Salon</span></p>
+        <p class="footer__tagline">
+          Modern hair styling and extensions in the heart of South Gate, California.
+        </p>
       </div>
       <div>
         <p class="footer__heading">Pages</p>
@@ -480,28 +517,13 @@
     <p class="footer__bottom">© 2025 Safari Beauty Salon. All rights reserved.</p>
   </footer>
 
+  <!--
+    main.js  — handles nav, animations, active link highlighting
+    booking.js — handles date change, time slot loading, form submission
+    booking.js must load AFTER main.js
+  -->
   <script src="js/main.js"></script>
   <script src="js/booking.js"></script>
-  <script>
-    // Store selected time in hidden input
-    function selectTime(el, time) {
-      if (el.classList.contains('booked')) return;
-      document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
-      el.classList.add('selected');
-      document.getElementById('selectedTime').value = time;
-    }
 
-    // Set minimum date to today
-    const dateInput = document.getElementById('date');
-    const today = new Date().toISOString().split('T')[0];
-    dateInput.setAttribute('min', today);
-
-    // Form submit (placeholder — will connect to Python API in Sprint 3)
-    document.getElementById('bookingForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-      alert('Thank you! Your appointment request has been received. We will confirm within 1 hour. (Backend coming in Sprint 3!)');
-    });
-  </script>
 </body>
-
 </html>

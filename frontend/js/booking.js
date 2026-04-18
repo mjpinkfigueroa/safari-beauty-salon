@@ -19,8 +19,32 @@
 */
 
 // The base URL of our Python backend server
-// During development this is localhost. In production it'll be your real domain.
 const API_URL = 'https://safari-beauty-salon-api.onrender.com/api';
+
+
+// ── INITIAL STATE — hide time slots until date is selected ─────────
+// When the page first loads, show a friendly prompt instead of slots.
+// Slots only appear after the user picks a date.
+function showDatePrompt() {
+  const container = document.querySelector('.time-slots');
+  if (!container) return;
+
+  container.innerHTML = `
+    <p style="
+      font-size: 0.85rem;
+      color: var(--color-muted);
+      font-style: italic;
+      padding: 0.75rem 0;
+      grid-column: 1 / -1;
+    ">
+      Please select a date above to see available times.
+    </p>
+  `;
+}
+
+// Run on page load — shows the prompt instead of slots
+showDatePrompt();
+
 
 // ── LOAD AVAILABILITY WHEN DATE CHANGES ───────────────────────────
 // When the user picks a date, we fetch which slots are already booked.
@@ -31,11 +55,14 @@ if (dateInput) {
   const today = new Date().toISOString().split('T')[0];
   dateInput.setAttribute('min', today);
 
-  // Listen for date changes
+  // Listen for date changes — only then show time slots
   dateInput.addEventListener('change', async function () {
     const selectedDate = this.value;
     if (selectedDate) {
       await loadAvailability(selectedDate);
+    } else {
+      // If they clear the date, go back to the prompt
+      showDatePrompt();
     }
   });
 }
@@ -44,10 +71,20 @@ if (dateInput) {
 // ── FETCH AVAILABLE SLOTS FROM BACKEND ────────────────────────────
 async function loadAvailability(date) {
   try {
-    // Show a loading state while waiting
+    // Show a loading state while waiting for the server
     const slotsContainer = document.querySelector('.time-slots');
     if (slotsContainer) {
-      slotsContainer.innerHTML = '<p style="font-size:0.85rem;color:var(--color-muted);">Loading available times...</p>';
+      slotsContainer.innerHTML = `
+        <p style="
+          font-size: 0.85rem;
+          color: var(--color-muted);
+          font-style: italic;
+          padding: 0.75rem 0;
+          grid-column: 1 / -1;
+        ">
+          Loading available times...
+        </p>
+      `;
     }
 
     // fetch() sends a GET request to our availability endpoint
@@ -62,10 +99,11 @@ async function loadAvailability(date) {
       renderTimeSlots(data.slots);
     } else {
       console.error('Failed to load availability:', data.error);
+      renderDefaultSlots();
     }
 
   } catch (error) {
-    // This catches network errors (e.g., server not running)
+    // This catches network errors (e.g., server is sleeping on free tier)
     console.error('Network error loading availability:', error);
     renderDefaultSlots(); // Fall back to static slots
   }
@@ -99,6 +137,8 @@ function renderTimeSlots(slots) {
 
 
 // ── FALLBACK: STATIC SLOTS (if server isn't running) ──────────────
+// Shows all slots as available if we can't reach the backend.
+// This way the form still works even if the server is waking up.
 function renderDefaultSlots() {
   const container = document.querySelector('.time-slots');
   if (!container) return;
@@ -140,18 +180,23 @@ if (bookingForm) {
     // Build a plain JavaScript object with all the form values
     const bookingData = {
       first_name: document.getElementById('firstName').value.trim(),
-      last_name: document.getElementById('lastName').value.trim(),
-      email: document.getElementById('email').value.trim(),
-      phone: document.getElementById('phone').value.trim(),
-      service: document.getElementById('service').value,
-      stylist: document.getElementById('stylist').value,
-      date: document.getElementById('date').value,
-      time: document.getElementById('selectedTime').value,
-      notes: document.getElementById('notes').value.trim(),
+      last_name:  document.getElementById('lastName').value.trim(),
+      email:      document.getElementById('email').value.trim(),
+      phone:      document.getElementById('phone').value.trim(),
+      service:    document.getElementById('service').value,
+      stylist:    document.getElementById('stylist').value,
+      date:       document.getElementById('date').value,
+      time:       document.getElementById('selectedTime').value,
+      notes:      document.getElementById('notes').value.trim(),
     };
 
     // ── CLIENT-SIDE VALIDATION ─────────────────────────────────
     // Check required fields before even sending to the server
+    if (!bookingData.date) {
+      showMessage('Please select a date.', 'error');
+      return;
+    }
+
     if (!bookingData.time) {
       showMessage('Please select a time slot.', 'error');
       return;
@@ -186,9 +231,11 @@ if (bookingForm) {
         );
         bookingForm.reset();
         document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
-        // Reset the button back to normal
+        // Reset button back to normal
         submitBtn.textContent = 'Confirm Appointment';
         submitBtn.disabled = false;
+        // Reset time slots back to prompt after successful booking
+        showDatePrompt();
       } else {
         showMessage(`❌ Error: ${result.error}`, 'error');
         submitBtn.textContent = 'Confirm Appointment';
@@ -196,8 +243,8 @@ if (bookingForm) {
       }
 
     } catch (error) {
-      // Network error — server probably not running
-      showMessage('❌ Could not connect to the server. Make sure the backend is running.', 'error');
+      // Network error — server probably sleeping on free tier
+      showMessage('❌ Could not connect to the server. Please try again in a moment.', 'error');
       const submitBtn = bookingForm.querySelector('.booking-submit');
       submitBtn.textContent = 'Confirm Appointment';
       submitBtn.disabled = false;
@@ -207,7 +254,7 @@ if (bookingForm) {
 
 
 // ── SHOW FEEDBACK MESSAGE ──────────────────────────────────────────
-// Displays a success or error message below the form
+// Displays a success or error message below the submit button
 function showMessage(text, type) {
   // Remove any existing message first
   const existing = document.getElementById('bookingMessage');

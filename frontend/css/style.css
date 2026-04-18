@@ -657,3 +657,16 @@ ul {
     height: 260px;
   }
 }
+
+/* ── REAL GALLERY PHOTOS ──────────────────────────────────── */
+.gallery-item img {
+  width: 100%;
+  display: block;
+  border-radius: var(--radius-md);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.gallery-item img:hover {
+  transform: scale(1.02);
+  box-shadow: 0 12px 40px rgba(92, 74, 50, 0.18);
+}

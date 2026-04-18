@@ -12,7 +12,7 @@ It's perfect for learning and small projects because:
   - No separate server to install or run
   - The entire database is one file
   - Python has built-in support for it (sqlite3 module)
-  
+
 For production (a live website), we'd switch to PostgreSQL,
 but the Python code stays almost identical — just the connection changes.
 
@@ -30,13 +30,13 @@ import sqlite3
 def get_db_connection(db_path):
     """
     Opens a connection to the SQLite database file.
-    
+
     Parameters:
         db_path (str): The file path to the .db file
-    
+
     Returns:
         conn: A database connection object
-    
+
     Think of this like opening a spreadsheet file.
     You need to open it before you can read or write data.
     Always close it when you're done (conn.close()).
@@ -53,23 +53,20 @@ def get_db_connection(db_path):
 
 def init_db(db_path):
     """
-    Creates the database tables if they don't exist yet.
-    
-    This runs once when the server starts. If the tables already exist,
-    "CREATE TABLE IF NOT EXISTS" safely skips creation — no duplicates.
-    
-    Parameters:
-        db_path (str): The file path where the .db file should be created
+    Creates the database folder and tables if they don't exist yet.
     """
+    # THIS IS THE FIX:
+    # Create the database folder if it doesn't exist
+    # os.makedirs with exist_ok=True means "create the full path,
+    # and don't crash if it already exists"
+    import os
+
+    os.makedirs(os.path.dirname(db_path), exist_ok=True)
+
     conn = get_db_connection(db_path)
 
-    # ── BOOKINGS TABLE ────────────────────────────────────────────
-    # Stores every appointment made through the website.
-    # Each column has a TYPE and optional CONSTRAINTS:
-    #   INTEGER PRIMARY KEY AUTOINCREMENT = unique ID, auto-numbered
-    #   TEXT NOT NULL = required text field
-    #   TEXT = optional text field
-    conn.execute('''
+    conn.execute(
+        """
         CREATE TABLE IF NOT EXISTS bookings (
             id          INTEGER PRIMARY KEY AUTOINCREMENT,
             first_name  TEXT NOT NULL,
@@ -84,12 +81,11 @@ def init_db(db_path):
             status      TEXT DEFAULT 'pending',
             created_at  TEXT NOT NULL
         )
-    ''')
+    """
+    )
 
-    # ── SERVICES TABLE ────────────────────────────────────────────
-    # Stores the salon's service menu.
-    # Seeded with starter data below so the frontend can fetch it dynamically.
-    conn.execute('''
+    conn.execute(
+        """
         CREATE TABLE IF NOT EXISTS services (
             id          INTEGER PRIMARY KEY AUTOINCREMENT,
             category    TEXT NOT NULL,
@@ -98,40 +94,63 @@ def init_db(db_path):
             price_from  INTEGER NOT NULL,
             duration    TEXT
         )
-    ''')
+    """
+    )
 
-    # ── SEED SERVICES DATA ────────────────────────────────────────
-    # "Seeding" means inserting starter data into a fresh database.
-    # We only do this if the services table is empty.
-    existing = conn.execute('SELECT COUNT(*) FROM services').fetchone()[0]
+    existing = conn.execute("SELECT COUNT(*) FROM services").fetchone()[0]
 
     if existing == 0:
         services_data = [
-            # (category, name, description, price_from, duration)
-            ('Haircuts', "Women's Haircut", 'Wash, cut, and blow-dry', 45, '60 min'),
-            ('Haircuts', "Men's Haircut",   'Precision cut with clean finish', 30, '30 min'),
-            ('Haircuts', "Kids' Haircut",   'For kids 12 and under', 20, '30 min'),
-            ('Haircuts', 'Bang Trim',        'Quick bang refresh', 10, '15 min'),
-            ('Extensions', 'Tape-In Extensions', 'Seamless, reusable tape method', 200, '2 hrs'),
-            ('Extensions', 'Sew-In Extensions',  'Weft sewn onto braided base', 250, '3 hrs'),
-            ('Extensions', 'Extension Removal',  'Safe removal with conditioning', 75, '60 min'),
-            ('Color', 'Full Color',      'Single-process root to ends', 85, '90 min'),
-            ('Color', 'Highlights',      'Partial or full foil highlights', 100, '2 hrs'),
-            ('Color', 'Balayage',        'Hand-painted natural color', 130, '2.5 hrs'),
-            ('Color', 'Root Touch-Up',   'Color at root only', 60, '60 min'),
-            ('Treatments', 'Keratin Treatment', 'Frizz-free smoothing', 150, '2.5 hrs'),
-            ('Treatments', 'Deep Conditioning', 'Intensive moisture mask', 35, '45 min'),
+            ("Haircuts", "Women's Haircut", "Wash, cut, and blow-dry", 45, "60 min"),
+            (
+                "Haircuts",
+                "Men's Haircut",
+                "Precision cut with clean finish",
+                30,
+                "30 min",
+            ),
+            ("Haircuts", "Kids' Haircut", "For kids 12 and under", 20, "30 min"),
+            ("Haircuts", "Bang Trim", "Quick bang refresh", 10, "15 min"),
+            (
+                "Extensions",
+                "Tape-In Extensions",
+                "Seamless, reusable tape method",
+                200,
+                "2 hrs",
+            ),
+            (
+                "Extensions",
+                "Sew-In Extensions",
+                "Weft sewn onto braided base",
+                250,
+                "3 hrs",
+            ),
+            (
+                "Extensions",
+                "Extension Removal",
+                "Safe removal with conditioning",
+                75,
+                "60 min",
+            ),
+            ("Color", "Full Color", "Single-process root to ends", 85, "90 min"),
+            ("Color", "Highlights", "Partial or full foil highlights", 100, "2 hrs"),
+            ("Color", "Balayage", "Hand-painted natural color", 130, "2.5 hrs"),
+            ("Color", "Root Touch-Up", "Color at root only", 60, "60 min"),
+            ("Treatments", "Keratin Treatment", "Frizz-free smoothing", 150, "2.5 hrs"),
+            (
+                "Treatments",
+                "Deep Conditioning",
+                "Intensive moisture mask",
+                35,
+                "45 min",
+            ),
         ]
-
-        # executemany() inserts multiple rows at once — more efficient than a loop
         conn.executemany(
-            '''INSERT INTO services (category, name, description, price_from, duration)
-               VALUES (?, ?, ?, ?, ?)''',
-            services_data
+            """INSERT INTO services (category, name, description, price_from, duration)
+               VALUES (?, ?, ?, ?, ?)""",
+            services_data,
         )
 
-    # commit() saves all changes to the file
     conn.commit()
     conn.close()
-
-    print(f'✅ Database initialized at: {db_path}')
+    print(f"✅ Database initialized at: {db_path}")
